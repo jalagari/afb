@@ -122,7 +122,7 @@ header nav .nav-sections ul  {
 } 
 
 header nav .nav-sections li {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -191,7 +191,8 @@ header nav[aria-expanded='true'] .nav-tools li {
   }
 
   header nav .nav-brand {
-    flex: 0 0 150px;
+    color: #fa0f00;
+    padding: 0 20px;
   }
 
   header nav .nav-sections ul {
@@ -244,17 +245,18 @@ header nav[aria-expanded='true'] .nav-tools li {
 
 
   header nav .nav-sections > ul > li > ul > li {
-    font-size: 18px;
-    padding: 8px 16px;
+    font-size: 14;
+    padding: 6px 20px
   }
 
   header nav .nav-sections > ul > li[aria-expanded='true'] ul {
     display: block;
     position: absolute;
     background-color: var(--highlight-background-color);
-    width: 300px;
+    width: 205px;
     left: 0;
-    padding: 16px;
-    box-shadow: 0 0 5px var(text-color);
+    padding: 4px;
+    border-top: 1px solid #EAEAEA;
+    box-shadow: 0 3px 3px rgb(0 0 0 / 20%);
   }
 }
