@@ -1,1 +1,4 @@
 /* below the fold CSS goes here */
+@font-face{font-family:"Nedbank Sans Medium";src:url("/styles/fonts/NedbankSans-Medium.otf"),url("/styles/fonts/NedbankSans-Medium.woff")}
+@font-face{font-family:"Open Sans Regular";src:url("/styles/fonts/OpenSans-Regular.ttf")}
+@font-face{font-family:"Nedbank Sans Bold";src:url("/styles/fonts/NedbankSans-Bold.otf"),url("/styles/fonts/NedbankSans-Bold.woff")}
