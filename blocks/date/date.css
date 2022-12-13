@@ -1,0 +1,10 @@
+.cmp-adaptiveform-date__widget {
+    width: 100%;
+    height: 40px;
+    color: #666;
+    border: 1px solid #666;
+    border-radius: 0.25rem;
+    margin-top: 10px;
+    padding-left: 10px;
+    font-size: 1rem;
+}

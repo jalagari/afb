@@ -653,3 +653,8 @@ width: 60%;
 border-top: 2px solid #ccc;
 padding: 20px 0;
 }
+
+.table-wrapper {
+  max-width: 900px;
+  margin: auto;
+}
