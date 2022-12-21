@@ -27,13 +27,13 @@ export class AdaptiveForm {
          return this.model?.getElement(id);
      }
 
-    render() {
+    render = async() => {
         const form = document.createElement('form');
         form.className = "cmp-adaptiveform-container cmp-container";
         this.#form = form;
 
         let state = this.model?.getState();
-        this.renderChildrens(form, state);
+        await this.renderChildrens(form, state);
         this.element.replaceWith(form);
         return form;
     }
@@ -107,7 +107,7 @@ export class AdaptiveForm {
 
       console.time('Form Model Instance Creation');
       let adaptiveform = new AdaptiveForm(formLink, convertedData?.formDef);
-      adaptiveform.render();
+      await adaptiveform.render();
       //@ts-ignore
       window.adaptiveform = adaptiveform
       console.timeEnd('Form Model Instance Creation');
