@@ -1,5 +1,5 @@
-import { renderField } from "../../libs/afb-builder.js";
-import { getWidget, setActive, subscribe, updateValue } from "../../libs/afb-interaction.js";
+import * as builder from "../../libs/afb-builder.js";
+import { getWidget, subscribe, updateValue } from "../../libs/afb-interaction.js";
 import { DefaultField } from "../defaultInput.js";
 import NumericInputWidget from "./NumberInputWidget.js";
 
@@ -22,7 +22,7 @@ export class NumberInput extends DefaultField {
     }
 
     render() {
-        this.element = renderField(this.model, this.blockName)
+        this.element = builder?.default?.renderField(this.model, this.blockName)
         this.block.appendChild(this.element);
         this.addListener();
         subscribe(this.model, this.element, {value : this._updateValue});

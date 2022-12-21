@@ -1,7 +1,8 @@
 import {  getLayoutProperties, getTooltipValue, getViewId } from "../../libs/afb-model.js";
 import { getWidget, subscribe } from "../../libs/afb-interaction.js";
 import { Constants } from "../../libs/constants.js";
-import { defaultInputRender, renderField, setDisabledAttribute } from "../../libs/afb-builder.js";
+import * as builder from "../../libs/afb-builder.js";
+
 import { DefaultField } from "../defaultInput.js";
 
 export class Radio extends DefaultField {
@@ -45,7 +46,7 @@ export class Radio extends DefaultField {
         input.required = state?.required;
         input.checked = enumValue == state.value;
         input.setAttribute("aria-describedby", "_desc");
-        setDisabledAttribute(state, input);
+        builder?.default?.setDisabledAttribute(state, input);
 
         let span = document.createElement("span");
         span.textContent = enumDisplayName || enumValue;
@@ -75,7 +76,7 @@ export class Radio extends DefaultField {
     } 
 
     render() {
-        this.element = renderField(this.model, this.blockName, this.createInputHTML)
+        this.element = builder?.default?.renderField(this.model, this.blockName, this.createInputHTML)
         this.block.appendChild(this.element);
         this.addListener();
         subscribe(this.model, this.element, {value : this.updateValue});

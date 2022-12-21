@@ -1,8 +1,8 @@
 import { DefaultField } from "../defaultInput.js";
-import { getLabelValue, getTooltipValue, getViewId } from "../../libs/afb-model.js";
 import { getWidget, subscribe } from "../../libs/afb-interaction.js";
 import { Constants } from "../../libs/constants.js";
-import { createErrorHTML, createLabel, createLongDescHTML, createQuestionMarkHTML, createWidgetWrapper, defaultInputRender } from "../../libs/afb-builder.js";
+import * as builder from "../../libs/afb-builder.js";
+import { getLabelValue } from "../../libs/afb-model.js";
 
 export class Checkbox {
 
@@ -30,12 +30,12 @@ export class Checkbox {
     renderField = (model) => {
         let state = model?.getState();
 
-        let element = createWidgetWrapper(state, this.blockName);
-        let label = createLabel(state, this.blockName);
-        let input = defaultInputRender(state, this.blockName);
-        let longDesc = createLongDescHTML(state, this.blockName);
-        let help = createQuestionMarkHTML(state, this.blockName);
-        let error = createErrorHTML(state, this.blockName);
+        let element = builder?.default?.createWidgetWrapper(state, this.blockName);
+        let label = builder?.default?.createLabel(state, this.blockName);
+        let input = builder?.default?.defaultInputRender(state, this.blockName);
+        let longDesc = builder?.default?.createLongDescHTML(state, this.blockName);
+        let help = builder?.default?.createQuestionMarkHTML(state, this.blockName);
+        let error = builder?.default?.createErrorHTML(state, this.blockName);
 
         let div = document.createElement("div");
         div.className = this.blockName + "-item ";

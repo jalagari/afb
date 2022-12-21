@@ -1,12 +1,8 @@
 import ExcelToFormModel from "./libs/afb-transform.js";
-import defaultInput from "./components/defaultInput.js";
 import { createFormInstance } from "./libs/afb-runtime.js";
+import * as builder from "./libs/afb-builder.js"
 
 export class AdaptiveForm {
-
-  defaultInputTypes = ["color", "date", "datetime-local", "email", "hidden",
-                "month", "password", "tel", "text", "time",
-                "url", "week"];
     model;
     #form;
     element;
@@ -47,46 +43,12 @@ export class AdaptiveForm {
         if(fields && fields.length>0) {
           for(let index in fields) {
             let field = fields[index];
-            let element = await this.getRender(field)
+            let fieldModel = this.getModel(field.id);
+            let element = await builder?.default?.getRender(fieldModel)
             form.append(element);
           }
         }
         console.timeEnd("Rendering childrens")
-    }
-    /** 
-     * @param {(import("afcore").ContainerJson | import("afcore").FieldJson) & import("afcore").State<import("afcore").ContainerJson | import("afcore").FieldJson>} field
-     **/
-    getRender = async (field) => {
-      const block = document.createElement('div');
-      try {
-          let fieldModel = this.getModel(field.id);
-          let component, fieldType = field?.fieldType;
-          if(!this.defaultInputTypes.includes(fieldType) && fieldType) {
-            component = await this.loadComponent(fieldType);
-          }
-          if(component && component.default) {
-              await component?.default(block, fieldModel);
-          } else {
-              defaultInput(block, fieldModel)
-          }
-      } catch (error) {
-          console.error("Unexpected error ", error);
-      }
-      return block;
-    }
-
-    /**
-     * @param {string} componentName 
-     * @return {Promise<any>} component
-     */
-    loadComponent = async(componentName) => {
-      let modulePath = `./components/${componentName}/${componentName}.js`;
-      try {
-        return await import(modulePath);
-      } catch(error) {
-        console.error(`Unable to find module ${componentName}`, error )
-      }
-      return undefined;
     }
  }
 
