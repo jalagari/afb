@@ -3102,9 +3102,16 @@ textarea.cmp-adaptiveform-textinput__widget {
   padding: 5px;
 }
 
-.cmp-adaptiveform-textinput[data-cmp-valid="false"] > label {
- color: #e1163c;
+.cmp-adaptiveform-textinput[data-cmp-valid="false"] > label{
+ color: #ff5252;
 }
+
+.cmp-adaptiveform-textinput[data-cmp-valid="false"] > div {
+  color: #ff5252;
+  font-weight: 100;
+  font-size: 12px;
+  font-family: gotham-book,sans-serif;
+ }
 
 /* custom css */
 
@@ -3300,24 +3307,19 @@ textarea.cmp-adaptiveform-textinput__widget {
 
 
 
-
-
-
-
-
-
-
 /* custom CSS */
 
 .vaform input[type=text-input], .vaform input[type=email] , .vaform select{
   padding: 5px;
   outline: none;
-  border: 1px solid #ececec; 
 }
 
 .vaform input[type=text-input]:focus , .vaform input[type=email]:focus , .vaform select:focus{
   outline: none ;
-  border-bottom: 1px solid #61126b !important;
+  border-top: 0.1px solid !important;
+  border-left:  0.1px solid !important;
+  border-right: 0.1px solid !important;
+  border-bottom: 3px solid #61126b !important;
 }
 
 
@@ -3332,6 +3334,12 @@ textarea.cmp-adaptiveform-textinput__widget {
 }
 
 .cmp-adaptiveform-text-input:focus-within  label , .cmp-adaptiveform-dropdown:focus-within label , .cmp-adaptiveform-email:focus-within label{
+  color: #61126b;
+  top: 22px;
+  font-size: small;
+}
+
+.vaform input:not(:focus):valid label{
   color: #61126b;
   top: 22px;
   font-size: small;
