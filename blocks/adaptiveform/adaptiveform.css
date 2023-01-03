@@ -3086,34 +3086,13 @@ textarea.cmp-adaptiveform-textinput__widget {
 }
 
 
-/* .cmp-adaptiveform-textinput[data-cmp-valid="false"] {
+.cmp-adaptiveform-textinput[data-cmp-valid="false"] {
   background: #eb3c360d;
   border: solid #eb3c36;
   border-width: 0 0 0 4px;
   padding: 5px;
-} */
-
-
-/* custom css */
-
-.cmp-adaptiveform-textinput[data-cmp-valid="false"] > input {
-  border: solid #e1163c!important;
-  border-width: 1px 1px 3px 1px !important;
-  padding: 5px;
 }
 
-.cmp-adaptiveform-textinput[data-cmp-valid="false"] > label{
- color: #ff5252;
-}
-
-.cmp-adaptiveform-textinput[data-cmp-valid="false"] > div {
-  color: #ff5252;
-  font-weight: 100;
-  font-size: 12px;
-  font-family: gotham-book,sans-serif;
- }
-
-/* custom css */
 
 .cmp-adaptiveform-textinput[data-cmp-valid="true"] {
   border: solid #23b482;
@@ -3306,48 +3285,66 @@ textarea.cmp-adaptiveform-textinput__widget {
 
 
 
-
 /* custom CSS */
 
-.vaform input[type=text-input], .vaform input[type=email] , .vaform select{
+.button-container {
+  background-color: white;
+  z-index: 3;
+}
+.cmp-adaptiveform-container {
+  margin: auto;
+  width: 60%;
+}
+
+.vaform .cmp-adaptiveform-textinput__widget , .vaform .cmp-adaptiveform-textinput__widget {
   padding: 5px;
   outline: none;
 }
 
-.vaform input[type=text-input]:focus , .vaform input[type=email]:focus , .vaform select:focus{
+/* .vaform .cmp-adaptiveform-dropdown__widget {
+  padding: 25px;
+  outline: none;
+} */
+
+.vaform input[type=text-input]:focus , .vaform input[type=email]:focus, .vaform select:focus {
   outline: none ;
-  border-top: 0.1px solid !important;
-  border-left:  0.1px solid !important;
-  border-right: 0.1px solid !important;
-  border-bottom: 3px solid #61126b !important;
+  border-top: 0.1px solid ;
+  border-left:  0.1px solid ;
+  border-right: 0.1px solid ;
+  border-bottom: 3px solid #61126b ;
 }
 
-
-.cmp-adaptiveform-textinput label, .cmp-adaptiveform-dropdown label {
+.vaform input[type=text-input] + label, .vaform input[type=email] + label, .vaform select + label {
   position: relative;
-  top: 50px;
-  left: 15px;
-  color: rgba(0,0,0,.87);
+  bottom: 40px;
+  left: 12px;
+  color:#222;
   pointer-events: none;
   transition: 0.2s ease all;
-  font-weight: 400;
+  font-size: 16px;
+  font-family: sans-serif;
 }
 
-.cmp-adaptiveform-text-input:focus-within  label , .cmp-adaptiveform-dropdown:focus-within label , .cmp-adaptiveform-email:focus-within label{
+
+.vaform input[type=text-input]:focus + label,
+.vaform input[type=text-input]:not(:focus):valid + label,
+.vaform input[type=email]:focus + label,
+.vaform input[type=email]:not(:focus):valid + label
+.vaform select:focus + label,
+.vaform select:not(:focus):valid + label
+{
   color: #61126b;
-  top: 22px;
-  font-size: small;
+  bottom: 67px;
+  left: 10px;
+  font-size: 10px;
+  background-color: white;
 }
 
-.vaform input:not(:focus):valid label{
-  color: #61126b;
-  top: 22px;
-  font-size: small;
+.vaform .cmp-adaptiveform-textinput__errorMessage, .vaform .cmp-adaptiveform-email__errorMessage , .vaform .cmp-adaptiveform-dropdown__errorMessage {
+  position: relative;
+  bottom: 20px;
 }
 
-.cmp-adaptiveform-container {
-  margin: auto;
-}
 
 .cmp-adaptiveform-checkbox-item span {
   font-size: 16px;
@@ -3384,11 +3381,52 @@ textarea.cmp-adaptiveform-textinput__widget {
   border: 0px;
 }
 
-.userDetailstHeader, .flightDetailsHeader , .adddressHeader , .leagalHeader , .paymentHeader {
+
+.vaform .cmp-adaptiveform-textinput {
+  border: 0;
+  background: none;
+}
+
+.vaform .cmp-adaptiveform-dropdown {
+  border: 0;
+  background: none;
+}
+
+
+
+.vaform .cmp-adaptiveform-textinput[data-cmp-valid="false"] > input ,
+.vaform .cmp-adaptiveform-dropdown[data-cmp-valid="false"] > select {
+  border: solid #e1163c!important;
+  border-width: 1px 1px 3px 1px !important;
+  padding: 5px;
+}
+
+.vaform .cmp-adaptiveform-textinput[data-cmp-valid="false"] > label,
+.vaform .cmp-adaptiveform-dropdown[data-cmp-valid="false"] > label 
+{
+ color: #ff5252;
+}
+
+.vaform .cmp-adaptiveform-textinput[data-cmp-valid="false"] > div ,
+.vaform .cmp-adaptiveform-dropdown[data-cmp-valid="false"] > div 
+{
+  color: #ff5252;
+  font-weight: 100;
+  font-size: 12px;
+  font-family: gotham-book,sans-serif;
+ }
+
+ /** error handling*/
+
+
+ .userDetailstHeader, .flightDetailsHeader , .adddressHeader , .leagalHeader , .paymentHeader {
   font-family: gotham-book,sans-serif;
   font-weight: 400;
   font-size: 22px;
   line-height: 1.5;
   color: #61126b;
-  margin-top: 20px;
+  margin-top: 80px;
 }
+ 
+
+
