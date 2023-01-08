@@ -72,7 +72,7 @@ export class AdaptiveForm {
       } catch (error) {
           console.error("Unexpected error ", error);
       }
-      return block;
+      return block.children[0];
     }
 
     /**

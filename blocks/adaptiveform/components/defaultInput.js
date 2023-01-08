@@ -1,5 +1,5 @@
 import { setActive, subscribe } from "../libs/afb-interaction.js";
-import { getWidget, renderField } from "../libs/afb-builder.js";
+import { getWidget, renderField, createWidgetWrapper } from "../libs/afb-builder.js";
 import { Constants } from "../libs/constants.js";
 
 export class DefaultField {
@@ -30,11 +30,19 @@ export class DefaultField {
     }
 
     render() {
-        this.element = renderField(this.model, this.blockName)
+        debugger;
+        if (this.model.fieldType === 'hidden') {
+            const state = this.model.getState();
+            this.element = createWidgetWrapper(state, this.blockName);
+        } else {
+            this.element = renderField(this.model, this.blockName);
+        }
         this.block.className = Constants.ADAPTIVE_FORM+"-"+this.model?.fieldType
         this.block.appendChild(this.element);
-        this.addListener();
-        subscribe(this.model, this.element);
+        if (this.model.fieldType !== 'hidden') {
+            this.addListener();
+            subscribe(this.model, this.element);
+        }
     }
 }
 
