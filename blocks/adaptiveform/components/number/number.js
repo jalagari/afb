@@ -1,19 +1,19 @@
-import { renderField } from "../../libs/afb-builder.js";
-import { getWidget, setActive, subscribe, updateValue } from "../../libs/afb-interaction.js";
+import * as builder from "../../libs/afb-builder.js";
+import { getWidget, subscribe, updateValue } from "../../libs/afb-interaction.js";
+import { Constants } from "../../libs/constants.js";
 import { DefaultField } from "../defaultInput.js";
-import NumericInputWidget from "./NumberInputWidget.js";
 
 export class NumberInput extends DefaultField {
 
-    blockName = 'cmp-adaptiveform-numberinput';
+    blockName = Constants.NUMBER;
 
     widgetFormatter;
 
     _updateValue = (element ,value) =>{
         let widget = getWidget(element);
-        if (this.widgetFormatter == null && (this.model.editFormat || this.model.displayFormat)) {
+        /*if (this.widgetFormatter == null && (this.model.editFormat || this.model.displayFormat)) {
             this.widgetFormatter = new NumericInputWidget(widget, this.model)
-        }
+        }*/
         if (this.widgetFormatter) {
             this.widgetFormatter.setValue(value);
         } else {
@@ -22,7 +22,7 @@ export class NumberInput extends DefaultField {
     }
 
     render() {
-        this.element = renderField(this.model, this.blockName)
+        this.element = builder?.default?.renderField(this.model, this.blockName)
         this.block.appendChild(this.element);
         this.addListener();
         subscribe(this.model, this.element, {value : this._updateValue});

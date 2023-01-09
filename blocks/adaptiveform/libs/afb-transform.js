@@ -1,8 +1,14 @@
+import { ExcelToJsonFormula } from "./afb-transformrules.js";
+import { Formula } from "./json-formula.js";
 
 const PROPERTY = "property";
 const PROPERTY_RULES = "rules.properties";
 
 export default class ExcelToFormModel {
+
+    rowNumberFieldMap = new Map();
+    panelMap = new Map();
+    interpreter = new ExcelToJsonFormula(this.rowNumberFieldMap);
     
     fieldPropertyMapping = {
         "Default" : "default",
@@ -101,22 +107,30 @@ export default class ExcelToFormModel {
             throw new Error("Unable to retrieve the form details from " + formPath);
         }
         const formDef = this.#initFormDef(formPath);
-        var stack = [];
-        stack.push(formDef.items);
-        let currentPanel = formDef;
+        
+        this.panelMap.set("root", formDef);
+
+        let transformRules = [];
+        let rowNo = 2;
+        
         exData.data.forEach((/** @type {{ [s: string]: any; } | ArrayLike<any>} */ item)=> {
 
             let source = Object.fromEntries(Object.entries(item).filter(([_, v]) => (v != null && v!= "")));
             let field = {...source, ...this.#initField()};
             this.#transformFieldNames(field);
 
-            if(this.#isProperty(field)) {
+            if (this.#isProperty(field)) {
                 this.#handleProperites(formDef, field);
+            } else {
+                field?.fieldType === "panel" && this.panelMap.set(field?.name, field);
+                field = this.#handleField(field)
+                this.#addToParent(field);
+                field?.rules?.value && field?.rules?.value?.charAt(0) == "=" && transformRules.push(field);
             }
-             else {
-                currentPanel.items.push(this.#handleField(field));
-            }
+            this.rowNumberFieldMap.set(rowNo++, field);
         });
+
+        this.#transformExcelForumulaToRule(transformRules);
         this.#transformPropertyRules(formDef);
         return {formDef : formDef, excelData : exData};
     }
@@ -232,5 +246,37 @@ export default class ExcelToFormModel {
      */
     #isProperty(field) {
         return field && field.fieldType == PROPERTY;
+    }
+
+    /**
+     * Add the field to its relevant parent items.
+     * @param {Object} field 
+     */
+    #addToParent(field) {
+        let parent = field?.parent || "root";
+        let parentField = this.panelMap.get(this.panelMap.has(parent) ? parent : "root");
+        parentField.items = parentField.items || [];
+        parentField.items.push(field);
+        delete field?.parent;
+    }
+
+    /**
+     * Transform excel formula to json formula
+     * @param {*} fields 
+     */
+    #transformExcelForumulaToRule(fields) {
+        fields?.forEach(field => {
+            let valueRule = field?.rules?.value;
+            if(valueRule) {
+                let expresson = valueRule?.slice(1)?.toLowerCase();
+                let ast = new Formula(expresson, undefined, undefined, undefined); 
+                try {
+                    field.rules.value = this.interpreter.transform(ast?.node);
+                } catch (e) {
+                    console.error(e.message || e.toString());
+                    throw e;
+                }
+            }
+        })
     }
 }

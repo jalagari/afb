@@ -15,9 +15,12 @@
     static BUTTON = 'cmp-adaptiveform-button';
     static SELECT = 'cmp-adaptiveform-dropdown';
     static CHECKBOX = "cmp-adaptiveform-checkbox";
+    static CHECKBOX_GROUP = "cmp-adaptiveform-checkboxgroup";
     static RADIO = "cmp-adaptiveform-radiobutton";
     static TEXT = "cmp-adaptiveform-text";
-
+    static NUMBER = 'cmp-adaptiveform-numberinput';
+    static PANEL = "cmp-adaptiveform-panel";
+    
     static ADAPTIVE_FORM_LONG_DESC = "cmp-adaptiveform__longdescription"
     static ADAPTIVE_FORM_QM = "cmp-adaptiveform__questionmark"
 
@@ -86,4 +89,8 @@
          */
         CHECKED : "checked"
     }
-}
+
+    static DEFAULT_INPUT_TYPES = ["color", "date", "datetime-local", "email", "hidden",
+                "month", "password", "tel", "text", "time",
+                "url", "week"];
+   }

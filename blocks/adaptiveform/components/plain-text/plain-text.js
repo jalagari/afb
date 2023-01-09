@@ -2,6 +2,7 @@
 import { getViewId } from "../../libs/afb-model.js";
 import { subscribe } from "../../libs/afb-interaction.js";
 import { Constants } from "../../libs/constants.js";
+import * as builder from "../../libs/afb-builder.js";
 
 export class PlainText {
 
@@ -17,12 +18,8 @@ export class PlainText {
 
     renderField = () => {
         let state = this.model.getState();
-        let element = document.createElement("div");
-        element.id =  getViewId(state, this.blockName);
-        element.className = this.blockName;
-        element.dataset.cmpVisible = (state?.visible === true) + "";
-        element.dataset.cmpEnabled = (state?.enabled === true) + "";
-        element.dataset.cmpIs = this.blockName;
+        
+        let element = builder?.default?.createWidgetWrapper(state, this.blockName);
 
         let child = document.createElement("div");
         child.className = this.blockName + "__widget";

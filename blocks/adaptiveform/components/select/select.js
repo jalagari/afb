@@ -1,7 +1,7 @@
 import { isArrayType } from "../../libs/afb-model.js";
 import { getWidget, subscribe } from "../../libs/afb-interaction.js";
 import { Constants } from "../../libs/constants.js";
-import { defaultInputRender, renderField } from "../../libs/afb-builder.js";
+import * as builder from "../../libs/afb-builder.js";
 
 export class Select {
 
@@ -43,7 +43,7 @@ export class Select {
     }
 
     createInputHTML = (state) => {
-        let select = defaultInputRender(state, this.blockName, "select");
+        let select = builder?.default?.defaultInputRender(state, this.blockName, "select");
         select.multiple = isArrayType(state);
         if(state.placeholder) {
            let option = this.createOption("", state.placeholder, true, true);
@@ -70,7 +70,7 @@ export class Select {
     }
 
     render() {
-        this.element = renderField(this.model, this.blockName, this.createInputHTML)
+        this.element = builder?.default?.renderField(this.model, this.blockName, this.createInputHTML)
         this.block.appendChild(this.element);
         this.addListener();
         subscribe(this.model, this.element, {value : this.updateValue});
