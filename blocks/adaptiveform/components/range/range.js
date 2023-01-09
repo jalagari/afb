@@ -27,7 +27,15 @@ export class Range extends DefaultField {
     }
 
     #getFormattedValue(state, value) {
-        return state?.displayFormat ? state?.displayFormat.replace("{}", value) : value;
+        let result = value;
+        if(state?.displayFormat) {
+            if(value == 0) {
+                result = "6 months";
+            } else {
+                result = state?.displayFormat.replace("{}", value);
+            }
+        }
+        return result;
     }
 
     /**

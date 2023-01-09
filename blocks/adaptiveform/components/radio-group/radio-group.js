@@ -10,8 +10,8 @@ export class RadioGroup extends DefaultField {
     blockName = Constants.RADIO;
 
     addListener() {
-        let widget =  this.element?.querySelectorAll(`[class$='${Constants.WIDGET}']`);
-        widget?.forEach(widget => {
+        let widgets =  this.element?.querySelectorAll(`[class$='${Constants.WIDGET}']`);
+        widgets?.forEach(widget => {
             widget.addEventListener('change', (e) => {
                 this.model.value =  e.target.value;
             });
@@ -24,6 +24,22 @@ export class RadioGroup extends DefaultField {
             fragments.appendChild(this.createRadioButton(state, enumVal, state?.enumNames?.[index], index))
         })
         return fragments;
+    }
+
+    _updateEnum = (element, Enum) => {
+        //todo: remove extra options, fallback to enum if enumNames are not updated.
+        let widgets =  this.element?.querySelectorAll(`[class$='${Constants.WIDGET}']`);
+        widgets?.forEach((widget, i) =>{
+            widget.value = Enum[i];
+        });
+    }
+
+    _updateEnumNames = (element, enumNames) => {
+        //todo: remove extra options, fallback to enum if enumNames are not updated.
+        let widgets =  this.element?.querySelectorAll(`[class$='option__label']`);
+        widgets?.forEach((widget, i) =>{
+            widget.querySelector("span").innerHTML = enumNames[i];
+        });
     }
 
     createRadioButton = (state, enumValue, enumDisplayName, index) => {
@@ -72,7 +88,7 @@ export class RadioGroup extends DefaultField {
         this.element = builder?.default?.renderField(this.model, this.blockName, this.createInputHTML)
         this.block.appendChild(this.element);
         this.addListener();
-        subscribe(this.model, this.element, {value : this.updateValue});
+        subscribe(this.model, this.element, {value : this.updateValue, enum: this._updateEnum, enumNames : this._updateEnumNames});
     }
 }
 
