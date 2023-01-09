@@ -1,8 +1,14 @@
+import { ExcelToJsonFormula } from "./afb-transformrules.js";
+import { Formula } from "./json-formula.js";
+
 const PROPERTY = "property";
 const PROPERTY_RULES = "rules.properties";
 
 export default class ExcelToFormModel {
+
+    rowNumberFieldMap = new Map();
     panelMap = new Map();
+    interpreter = new ExcelToJsonFormula(this.rowNumberFieldMap);
     
     fieldPropertyMapping = {
         "Default" : "default",
@@ -28,8 +34,8 @@ export default class ExcelToFormModel {
         ["date-input", "datetime-local"],
         ["file-input", "file"],
         ["drop-down", "select"],
-        ["radio-group", ""],
-        ["checkbox-group", ""],
+        ["radio-group", "radio-group"],
+        ["checkbox-group", "checkbox-group"],
         ["plain-text", "plain-text"],
         ["checkbox", "checkbox"],
         ["multiline-input", "text-area"],
@@ -103,6 +109,9 @@ export default class ExcelToFormModel {
         const formDef = this.#initFormDef(formPath);
         
         this.panelMap.set("root", formDef);
+
+        let transformRules = [];
+        let rowNo = 2;
         
         exData.data.forEach((/** @type {{ [s: string]: any; } | ArrayLike<any>} */ item)=> {
 
@@ -114,10 +123,14 @@ export default class ExcelToFormModel {
                 this.#handleProperites(formDef, field);
             } else {
                 field?.fieldType === "panel" && this.panelMap.set(field?.name, field);
-                this.#addToParent(this.#handleField(field));
+                field = this.#handleField(field)
+                this.#addToParent(field);
+                field?.rules?.value && field?.rules?.value?.charAt(0) == "=" && transformRules.push(field);
             }
+            this.rowNumberFieldMap.set(rowNo++, field);
         });
 
+        this.#transformExcelForumulaToRule(transformRules);
         this.#transformPropertyRules(formDef);
         return {formDef : formDef, excelData : exData};
     }
@@ -245,5 +258,25 @@ export default class ExcelToFormModel {
         parentField.items = parentField.items || [];
         parentField.items.push(field);
         delete field?.parent;
+    }
+
+    /**
+     * Transform excel formula to json formula
+     * @param {*} fields 
+     */
+    #transformExcelForumulaToRule(fields) {
+        fields?.forEach(field => {
+            let valueRule = field?.rules?.value;
+            if(valueRule) {
+                let expresson = valueRule?.slice(1)?.toLowerCase();
+                let ast = new Formula(expresson, undefined, undefined, undefined); 
+                try {
+                    field.rules.value = this.interpreter.transform(ast?.node);
+                } catch (e) {
+                    console.error(e.message || e.toString());
+                    throw e;
+                }
+            }
+        })
     }
 }

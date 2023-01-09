@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    {
+      "id": "adaptive-form-preview",
+      "title": "Form Preview",
+      "url": "foo",
+      "passConfig": true,
+      "passReferrer": true,
+      "event": "adaptive-form-preview"
+    }
+  ]
+}
