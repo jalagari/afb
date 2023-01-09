@@ -30,11 +30,18 @@ export class DefaultField {
     }
 
     render() {
-        this.element = builder?.default?.renderField(this.model, this.blockName)
-        this.block.className = Constants.ADAPTIVE_FORM+"-"+this.model?.fieldType
+        if (this.model.fieldType === 'hidden') {
+            const state = this.model.getState();
+            this.element = builder?.default?.defaultInputRender(state, this.blockName);
+        } else {
+            this.element = builder?.default?.renderField(this.model, this.blockName)
+        }
+        this.block.classList.add(Constants.ADAPTIVE_FORM+"-"+this.model?.fieldType)
         this.block.appendChild(this.element);
-        this.addListener();
-        subscribe(this.model, this.element);
+        if (this.model.fieldType !== 'hidden') {
+            this.addListener();
+            subscribe(this.model, this.element);
+        }
     }
 }
 

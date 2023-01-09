@@ -101,6 +101,7 @@ export const createQuestionMarkHTML = (state, bemBlock) => {
     if(state?.tooltip) {
         let button = document.createElement("button");
         button.title = state?.tooltip;
+        button.setAttribute("aria-label", "Help Text")
         button.className = bemBlock + `__${Constants.QM} ${Constants.ADAPTIVE_FORM_QM}`;
         return button;
     }
@@ -202,7 +203,10 @@ export const getWidget = (element) => {
     } catch (error) {
         console.error("Unexpected error ", error);
     }
-    return block;
+    if (typeof fieldModel.name === "string") {
+        block.classList.add(fieldModel.name)
+    }
+    return block
   }
     /**
      * @param {string} componentName 

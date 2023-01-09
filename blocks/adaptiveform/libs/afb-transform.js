@@ -28,7 +28,7 @@ export default class ExcelToFormModel {
         ["date-input", "datetime-local"],
         ["file-input", "file"],
         ["drop-down", "select"],
-        ["radio-group", ""],
+        ["radio-group", "radio-group"],
         ["checkbox-group", ""],
         ["plain-text", "plain-text"],
         ["checkbox", "checkbox"],
@@ -113,7 +113,7 @@ export default class ExcelToFormModel {
             if (this.#isProperty(field)) {
                 this.#handleProperites(formDef, field);
             } else {
-                field?.fieldType === "panel" && this.panelMap.set(field?.name, field);
+                field?.fieldType === 'panel' && this.panelMap.set(field?.name, field);
                 this.#addToParent(this.#handleField(field));
             }
         });
@@ -163,6 +163,9 @@ export default class ExcelToFormModel {
         this.#handleMultiValues(field, "enumNames");
 
         this.#handleFranklinSpecialCases(field);
+        if (field.fieldType === 'panel') {
+            this.#handlePanelName(field)
+        }
         return field;
     }
 
@@ -245,5 +248,11 @@ export default class ExcelToFormModel {
         parentField.items = parentField.items || [];
         parentField.items.push(field);
         delete field?.parent;
+    }
+
+    #handlePanelName(field) {
+        if (typeof field?.type === "undefined") {
+            field.name = undefined
+        }
     }
 }
