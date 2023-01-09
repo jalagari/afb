@@ -6,10 +6,10 @@ import {createLabel as cl} from '../libs/default-builder.js'
  * @param {*} bemBlock 
  * @returns 
  */
-export const createLabel = (state, bemBlock) => {
+/*export const createLabel = (state, bemBlock) => {
     const label = cl(state, bemBlock)
     if(label) {
         label.textContent = state?.required ? label?.textContent + " *" : label?.textContent;
         return label;
     }
-}
+}*/
