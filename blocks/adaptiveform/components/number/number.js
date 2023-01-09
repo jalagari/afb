@@ -1,11 +1,12 @@
 import * as builder from "../../libs/afb-builder.js";
 import { getWidget, subscribe, updateValue } from "../../libs/afb-interaction.js";
 import { DefaultField } from "../defaultInput.js";
+import { Constants } from "../../libs/constants.js";
 import NumericInputWidget from "./NumberInputWidget.js";
 
 export class NumberInput extends DefaultField {
 
-    blockName = 'cmp-adaptiveform-numberinput';
+    blockName = Constants.NUMBER;
 
     widgetFormatter;
 

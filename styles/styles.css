@@ -3,7 +3,7 @@
  * To change the css, change the same named .less file. 
  * After changing .less file, run 'npm run lessc' from terminal to autogenerate .css file.
  */
-@font-face {
+ @font-face {
   font-family: "Open Sans-fallback";
   size-adjust: 105.41%;
   ascent-override: 105%;

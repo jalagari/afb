@@ -1,0 +1,226 @@
+{
+    "adaptiveform": "0.10.0",
+    "metadata": {
+      "grammar": "json-formula-1.0.0",
+      "version": "1.0.0"
+    },
+    "properties": {
+      
+    },
+    "rules": {
+      
+    },
+    "items": [
+      {
+        "id": "firstName",
+        "constraintMessages": {
+          "required": "Please fill in this field.",
+          "minLength": "First name must be at least two characters",
+          "maxLength": "First name must not expecte 5 characters"
+        },
+        "required": true,
+        "minLength": 2,
+        "maxLength": 5,
+        "placeholder": "E.g. Buzz",
+        "name": "firstName",
+        "label": {
+          "value": "First Name"
+        }
+      },
+      {
+        "id": "lastName",
+        "constraintMessages": {
+          "required": "Please fill in this field.",
+          "minLength": "Last name must be at least two characters"
+        },
+        "required": true,
+        "minLength": "2",
+        "placeholder": "E.g. Ligthyear",
+        "name": "lastName",
+        "label": {
+          "value": "Last Name"
+        }
+      },
+      {
+        "id": "fullName",
+        "constraintMessages": {
+          "required": "Please fill in this field."
+        },
+        "required": false,
+        "name": "fullName",
+        "readOnly": "true",
+        "rules": {
+          "value": "firstName & ' ' & lastName"
+        },
+        "label": {
+          "value": "Full Name"
+        }
+      },
+      {
+        "id": "email",
+        "constraintMessages": {
+          "required": "Please fill in this field.",
+          "pattern": "Please enter valid email address"
+        },
+        "required": true,
+        "pattern": "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$",
+        "placeholder": "E.g. buzz@nasa.gov",
+        "name": "email",
+        "fieldType": "email",
+        "label": {
+          "value": "E-Mail"
+        }
+      },
+      {
+        "id": "plainmsg",
+        "fieldType": "plain-text",
+        "value": "We need your phone number for the demo. We'll never use it for any other purposes."
+      },
+      {
+        "id": "company",
+        "constraintMessages": {
+          "required": "Please fill in this field."
+        },
+        "required": true,
+        "placeholder": "E.g. Nasa",
+        "name": "company",
+        "label": {
+          "value": "Company Name"
+        }
+      },
+      {
+        "id": "message",
+        "required": true,
+        "placeholder": "Hello Message",
+        "name": "message",
+        "fieldType": "text-area",
+        "label": {
+          "value": "Message"
+        },
+        "constraintMessages": {
+          "required": "Please fill in this field.",
+          "minLength": "Message should be at least 5 characters",
+          "maxLength": "Message shouldn't exceed 10 characters"
+        },
+        "minLength": 5,
+        "maxLength": 10
+      },
+      {
+        "id": "companySize",
+        "constraintMessages": {
+          "required": "Please fill in this field."
+        },
+        "required": true,
+        "placeholder": "Select One",
+        "name": "companySize",
+        "fieldType": "select",
+        "label": {
+          "value": "Company Size"
+        },
+        "enum": [
+          "1-10",
+          "11-50",
+          "51-200",
+          "201-500",
+          "501-1000",
+          "1001-5000",
+          "+5000"
+        ]
+      },
+      {
+        "id": "doboptions",
+        "fieldType": "checkbox",
+        "type": "string[]",
+        "name": "doboptions",
+        "constraintMessages": {
+          "required": "Please fill in this field."
+        },
+        "label": {
+          "value": "Dynamic controller on DOB field"
+        },
+        "default": [
+          1
+        ],
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "enumNames": [
+          "Make DOB required",
+          "Hide DOB",
+          "Disabled DOB",
+          "Set step size to 2"
+        ]
+      },
+      {
+        "id": "dob",
+        ":type": "date",
+        "placeholder": "Dob",
+        "required": true,
+        "name": "dob",
+        "label": {
+          "value": "Date of Birth"
+        },
+        "value": "2022-12-03",
+        "min": "2022-12-03",
+        "max": "2022-12-20",
+        "step": 2,
+        "constraintMessages": {
+          "required": "Please fill in this field."
+        },
+        "rules": {
+          "required": "contains(doboptions,'1')",
+          "visible": "!contains(doboptions,'2')",
+          "enabled": "!contains(doboptions,'3')"
+        }
+      },
+      {
+        "id": "phone",
+        "constraintMessages": {
+          "required": "Please fill in this field.",
+          "pattern": "Phone Number Should be 10 digit number with optional country code."
+        },
+        "required": true,
+        "pattern": "^(?!0+$)(\\+\\d{1,3}[- ]?)?(?!0+$)\\d{10}$",
+        "placeholder": "E.g. +1 555 555 5555",
+        "name": "phone",
+        "label": {
+          "value": "Phone"
+        },
+        "type": "number"
+      },
+      {
+        "id": "subscribe",
+        "constraintMessages": {
+          "required": "Please fill in this field."
+        },
+        "required": false,
+        "name": "subscribe",
+        "description": "We need your phone number for the demo. We'll never use it for any other purposes.",
+        "fieldType": "checkbox",
+        "label": {
+          "value": "Subscribe to Superside's blog and get the best in design thinking delivered biweekly."
+        },
+        "enum": [
+          "on"
+        ]
+      },
+      {
+        "constraintMessages": {
+          "required": "Please fill in this field."
+        },
+        "required": false,
+        "name": "submit",
+        "fieldType": "button",
+        "events": {
+          "click": "submitForm()"
+        },
+        "label": {
+          "value": "Let's chat"
+        }
+      }
+    ],
+    "action": "/registration"
+  }
