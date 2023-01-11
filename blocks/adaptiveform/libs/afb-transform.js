@@ -34,8 +34,8 @@ export default class ExcelToFormModel {
         ["date-input", "datetime-local"],
         ["file-input", "file"],
         ["drop-down", "select"],
-        ["radio-group", ""],
-        ["checkbox-group", ""],
+        ["radio-group", "radio-group"],
+        ["checkbox-group", "checkbox-group"],
         ["plain-text", "plain-text"],
         ["checkbox", "checkbox"],
         ["multiline-input", "text-area"],
@@ -176,6 +176,7 @@ export default class ExcelToFormModel {
         this.#handleMultiValues(field, "enumNames");
 
         this.#handleFranklinSpecialCases(field);
+        this.#handlePanel(field);
         return field;
     }
 
@@ -239,6 +240,19 @@ export default class ExcelToFormModel {
     #handleFranklinSpecialCases(item) {
         //Franklin Mandatory uses x for true.
         item.required = (item.required == "x" || item.required == "true");
+    }
+
+    /**
+     * Handle Panel related transformation.
+     * @param {*} field 
+     */
+    #handlePanel(field) {
+        if(field?.fieldType === 'panel') {
+            // Ignore name if type is not defined on panel.
+            if (typeof field?.type === "undefined") {
+                field.name = undefined
+            }
+        }
     }
 
     /**

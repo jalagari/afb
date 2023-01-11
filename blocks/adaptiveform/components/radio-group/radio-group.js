@@ -52,6 +52,22 @@ export class RadioGroup extends DefaultField {
 
         return div;
     }
+    
+    _updateEnum = (element, Enum) => {
+        //todo: remove extra options, fallback to enum if enumNames are not updated.
+        let widgets =  this.element?.querySelectorAll(`[class$='${Constants.WIDGET}']`);
+        widgets?.forEach((widget, i) =>{
+            widget.value = Enum[i];
+        });
+    }
+
+    _updateEnumNames = (element, enumNames) => {
+        //todo: remove extra options, fallback to enum if enumNames are not updated.
+        let widgets =  this.element?.querySelectorAll(`[class$='option__label']`);
+        widgets?.forEach((widget, i) =>{
+            widget.querySelector("span").innerHTML = enumNames[i];
+        });
+    }
 
     updateValue = (element, value) => {
         let widget =  element.querySelectorAll(`[class$='${Constants.WIDGET}']`);
@@ -72,7 +88,7 @@ export class RadioGroup extends DefaultField {
         this.element = builder?.default?.renderField(this.model, this.blockName, this.createInputHTML)
         this.block.appendChild(this.element);
         this.addListener();
-        subscribe(this.model, this.element, {value : this.updateValue});
+        subscribe(this.model, this.element, {value : this.updateValue, enum: this._updateEnum, enumNames : this._updateEnumNames});
     }
 }
 

@@ -101,6 +101,7 @@ export const createQuestionMarkHTML = (state, bemBlock) => {
     if(state?.tooltip) {
         let button = document.createElement("button");
         button.title = state?.tooltip;
+        button.setAttribute("aria-label", "Help Text");
         button.className = bemBlock + `__${Constants.QM} ${Constants.ADAPTIVE_FORM_QM}`;
         return button;
     }
@@ -202,6 +203,9 @@ export const getWidget = (element) => {
     } catch (error) {
         console.error("Unexpected error ", error);
     }
+    if (typeof fieldModel.name === "string") {
+        block.classList.add(fieldModel.name)
+    }
     return block;
   }
     /**
@@ -209,9 +213,8 @@ export const getWidget = (element) => {
      * @return {Promise<any>} component
      */
  export const loadComponent = async(componentName) => {
-    let modulePath = `../components/${componentName}/${componentName}.js`;
     try {
-        return await import(modulePath);
+        return await import(`../components/${componentName}/${componentName}.js`);
     } catch(error) {
         console.error(`Unable to find module ${componentName}`, error )
     }
