@@ -16,6 +16,9 @@ export class AdaptiveForm {
      constructor(element, formJson) {
         this.element = element;
         this.model = createFormInstance(formJson, undefined);
+        this.model?.subscribe(() => {
+          window.open("thankyou");
+        }, "success")
         FunctionRuntime?.registerFunctions(customFunctions);
      }
  
