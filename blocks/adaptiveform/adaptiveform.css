@@ -4108,7 +4108,7 @@ textarea.cmp-adaptiveform-textinput__widget {
   max-width: none;
 }
 
-.cmp-adaptiveform-container {
+/*.cmp-adaptiveform-container {
   width: 100%;
   display: flex;
   flex-wrap: nowrap;
@@ -4119,7 +4119,7 @@ textarea.cmp-adaptiveform-textinput__widget {
 .cmp-adaptiveform-container > div {
   display: flex;
   margin-top: 0px;
-}
+} */
 
 
 .adaptiveform-container h5 {
@@ -4225,11 +4225,11 @@ textarea.cmp-adaptiveform-textinput__widget {
       flex-direction: row;
   }
 
-   .cmp-adaptiveform-container > div {
+   /*.cmp-adaptiveform-container > div {
       order: 5;
       flex-basis: calc((100% - 30px)/2);
       max-width: calc((100% - 30px)/2);
-  }
+  }*/
 
    .cmp-adaptiveform-container > div:last-child {
       margin-left: auto;
@@ -4254,10 +4254,10 @@ textarea.cmp-adaptiveform-textinput__widget {
       column-gap: 130px;
   }
 
-   .cmp-adaptiveform-container > div {
+   /*.cmp-adaptiveform-container > div {
       flex-basis: calc((100% - 130px)/2);
       max-width: calc((100% - 130px)/2);
-  }
+  } */
 }
 
 @media (min-width: 1200px) {

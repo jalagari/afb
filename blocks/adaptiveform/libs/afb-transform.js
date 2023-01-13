@@ -38,7 +38,7 @@ export default class ExcelToFormModel {
         ["checkbox-group", "checkbox-group"],
         ["plain-text", "plain-text"],
         ["checkbox", "checkbox"],
-        ["multiline-input", "text-area"],
+        ["multiline-input", "textarea"],
         ["panel", "panel"],
         ["submit", "button"]
     ]);
