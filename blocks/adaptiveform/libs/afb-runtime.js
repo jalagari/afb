@@ -1882,7 +1882,7 @@ const multipartFormData = (data, attachments) => {
     }
     return formData;
 };
-const submit = async (context, success, error, submitAs = 'multipart/form-data', input_data = null) => {
+const submit = async (context, success, error, submitAs = 'application/json', input_data = null) => {
     const endpoint = context.form.action;
     let data = input_data;
     if (typeof data != 'object' || data == null) {
@@ -2029,7 +2029,7 @@ class FunctionRuntimeImpl {
                 _func: (args, data, interpreter) => {
                     const success = toString(args[0]);
                     const error = toString(args[1]);
-                    const submit_as = args.length > 2 ? toString(args[2]) : 'multipart/form-data';
+                    const submit_as = args.length > 2 ? toString(args[2]) : 'application/json';
                     const submit_data = args.length > 3 ? valueOf(args[3]) : null;
                     interpreter.globals.form.dispatch(new Submit({
                         success,
