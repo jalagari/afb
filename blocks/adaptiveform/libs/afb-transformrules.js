@@ -125,7 +125,7 @@ export class ExcelToJsonFormula {
         return first * -1;
       },
 
-      Literal: node => node.value,
+      Literal: node => `'${node.value}'`,
 
       Number: node => node.value,
 

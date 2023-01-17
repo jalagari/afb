@@ -14,7 +14,7 @@ export let defaultInputRender = (state, bemBlock, tag = "input") => {
         input.className = `${bemBlock}__widget`;
         input.title = isTooltipVisible(state) ? getTooltipValue(state) : '';
         input.name = state?.name || "";
-        input.value = state?.value || "";
+        input.value = (state?.displayFormat ? state?.displayValue  : state?.value)|| "";
         input.placeholder = state?.placeholder || ""
         input.required = state?.required === true;
         input.setAttribute("aria-label", isLabelVisible(state) ? getLabelValue(state) : '' );
@@ -100,11 +100,35 @@ export const createLabel = (state, bemBlock) => {
 export const createQuestionMarkHTML = (state, bemBlock) => {
     if(state?.tooltip) {
         let button = document.createElement("button");
-        button.title = state?.tooltip;
-        button.setAttribute("aria-label", "Help Text");
+        button.dataset.text = state?.tooltip;
+        button.setAttribute("aria-label", "Help Text")
         button.className = bemBlock + `__${Constants.QM} ${Constants.ADAPTIVE_FORM_QM}`;
+        
+        let tooltip = createTooltipHTML(state, bemBlock);
+
+        button.addEventListener("mouseenter", (event) => {
+            renderTooltip(event.target, tooltip, bemBlock);
+            event.stopPropagation();
+        });
+    
+        button.addEventListener("mouseleave", (event) => {
+            tooltip.remove();
+            event.stopPropagation();
+        });
+
         return button;
     }
+}
+
+/**
+ * @param {any} state FieldJson
+ * @param {string} bemBlock 
+ */
+export function createTooltipHTML(state, bemBlock) {
+    let tooltip = document.createElement("div");
+    tooltip.className = bemBlock + `__${Constants.TOOLTIP} ${Constants.ADAPTIVE_FORM_TOOLTIP}`;
+    tooltip.textContent =  state?.tooltip;
+    return tooltip;
 }
 
 /**
@@ -191,9 +215,10 @@ export const getWidget = (element) => {
  export const getRender = async (fieldModel) => {
     const block = document.createElement('div');
     try {
-        let component, fieldType = fieldModel?.fieldType;
-        if(!Constants.DEFAULT_INPUT_TYPES.includes(fieldType) && fieldType) {
-            component = await loadComponent(fieldType);
+        let component, fieldType = fieldModel?.fieldType || '';
+        const widgetType = Constants.fieldTypeMappings[fieldType] || fieldType
+        if(!Constants.DEFAULT_INPUT_TYPES.includes(widgetType) && widgetType) {
+            component = await loadComponent(widgetType);
         }
         if(component && component.default) {
             await component?.default(block, fieldModel);
@@ -219,4 +244,39 @@ export const getWidget = (element) => {
         console.error(`Unable to find module ${componentName}`, error )
     }
     return undefined;
+}
+
+export function renderTooltip(target, tooltip, bemBlock) {
+    tooltip.style.visibility = "hidden";
+    document.body.append(tooltip);
+
+    let targetPos = target.getBoundingClientRect();
+    let tooltipPos = tooltip.getBoundingClientRect();
+
+    let left = targetPos.left + (targetPos.width/2) + window.scrollX - (tooltipPos.width/2);
+    let top = targetPos.top + window.scrollY - (tooltipPos.height + 10);
+    let placement = "top";
+
+    if(left < 0) {
+        placement = "right";
+        left = targetPos.left + targetPos.width + window.scrollX + 10;
+        top = targetPos.top + (targetPos.height/2) + window.scrollY - (tooltipPos.height/2);
+    }
+
+    if(left + tooltipPos.width > document.documentElement.clientWidth) {
+        placement = "left";
+        left = targetPos.left + window.scrollX - (tooltipPos.width + 10);
+        top = targetPos.top + (targetPos.height/2) + window.scrollY - (tooltipPos.height/2);
+    }
+
+    if(top < 0) {
+        placement = "bottom";
+        left = targetPos.left + (targetPos.width/2) + window.scrollX - (tooltipPos.width/2);
+        top = targetPos.top + targetPos.height + window.scrollY + 10;
+    }
+
+    tooltip.style.top = top + "px";
+    tooltip.style.left = left + "px";
+    tooltip.className += ` ${Constants.ADAPTIVE_FORM_TOOLTIP}-${placement}`
+    tooltip.style.visibility = "visible";
 }

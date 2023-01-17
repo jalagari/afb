@@ -29,13 +29,17 @@ export class DefaultField {
         }
     }
 
-    render() {
+    renderElement() {
         if (this.model.fieldType === 'hidden') {
             const state = this.model.getState();
-            this.element = builder?.default?.defaultInputRender(state, this.blockName);
+            return builder?.default?.defaultInputRender(state, this.blockName);
         } else {
-            this.element = builder?.default?.renderField(this.model, this.blockName)
+            return builder?.default?.renderField(this.model, this.blockName)
         }
+    }
+
+    render() {
+        this.element = this.renderElement();
         this.block.classList.add(Constants.ADAPTIVE_FORM+"-"+this.model?.fieldType)
         this.block.appendChild(this.element);
         if (this.model.fieldType !== 'hidden') {

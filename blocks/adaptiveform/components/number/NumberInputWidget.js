@@ -73,6 +73,11 @@
         widget.addEventListener('keypress', (e)=> {
             this.#handleKeyPress(e);
         });
+        widget.addEventListener('focus', (e)=> {
+            this.#widget.value = this.#model.value;
+            if(this.element)
+                setActive(this.element, true);
+        });
         widget.addEventListener('paste', (e)=> {
             this.#handlePaste(e);
         });
@@ -81,6 +86,9 @@
         });
         widget.addEventListener('blur', (e) => {
             this.#model.value = this.getValue(e.target.value);
+            this.#widget.value = this.#model.displayValue;
+            if(this.element)
+                setActive(this.element, false);
         })
         // IME specific handling, to handle japanese languages max limit
         this.#attachCompositionEventHandlers(widget);
@@ -390,7 +398,7 @@
             if(value && this.#writtenInLocale) {
                 this.#widget.value = this.#convertValueToLocale(value);
             } else {
-                this.#widget.value=  this.#model.value;
+                this.#widget.value=  this.#model.displayValue;
             }
         }
     }

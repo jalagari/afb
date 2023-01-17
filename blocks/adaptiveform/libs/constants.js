@@ -7,6 +7,7 @@
     static LABEL= "label"
     static LONG_DESC = 'longdescription'
     static QM = 'questionmark'
+    static TOOLTIP = 'tooltip'
     static SHORT_DESC = 'shortdescription'
 
     static ADAPTIVE_FORM = "cmp-adaptiveform"
@@ -23,6 +24,7 @@
     
     static ADAPTIVE_FORM_LONG_DESC = "cmp-adaptiveform__longdescription"
     static ADAPTIVE_FORM_QM = "cmp-adaptiveform__questionmark"
+    static ADAPTIVE_FORM_TOOLTIP = "cmp-adaptiveform__tooltip"
 
     /**
      * data attribute to mark the dragged component valid or invalid.
@@ -93,4 +95,16 @@
     static DEFAULT_INPUT_TYPES = ["color", "date", "datetime-local", "email", "hidden",
                 "month", "password", "tel", "text", "time",
                 "url", "week"];
-   }
+
+   /**
+    * This would go away once we have the proper nomenclature in af
+    */
+    static fieldTypeMappings = {
+      "text-input" : "text",
+      "multiline-input" : "textarea",
+      "date-input" : "date",
+      "drop-down" : "select",
+      "radio-group" : "radio-group",
+      "number-input" : "number",
+    }
+}

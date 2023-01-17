@@ -1,5 +1,5 @@
 import { DefaultField } from "../defaultInput.js";
-import { Click } from "../../libs/afb-runtime.js";
+import { Click } from "../../libs/afb-events.js";
 import { getLabelValue, getTooltipValue, getViewId } from "../../libs/afb-model.js";
 import { subscribe } from "../../libs/afb-interaction.js";
 import { Constants } from "../../libs/constants.js";
