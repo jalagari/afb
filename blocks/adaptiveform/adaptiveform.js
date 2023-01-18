@@ -83,9 +83,8 @@ export class AdaptiveForm {
    * @param {{ querySelector: (arg0: string) => HTMLLinkElement | null; }} block
    */
   export default async function decorate(block) {
-    const formLinkWrapper = block.querySelector('div.button-container:has(> a[href$=".json"]');
-    const formLink = (formLinkWrapper == null ? block : formLinkWrapper).querySelector('a[href$=".json"]');
-
+    const formLink = block?.querySelector('a[href$=".json"]');
+    const formLinkWrapper = formLink?.parentElement;
     if (!formLink || !formLink.href) {
         throw new Error("No formdata action is provided, can't render adaptiveformblock");
     }
