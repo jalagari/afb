@@ -1,31 +1,18 @@
-export default function decorate(block) {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('enter');
-      }
-    });
-  });
+import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
 
-  const classes = ['one', 'two', 'three', 'four', 'five'];
-  const row = block.children[0];
-  if (row) {
-    block.classList.add(classes[row.children.length - 1]);
-  }
-  block.querySelectorAll(':scope > div > div').forEach((cell) => {
-    if (cell.firstChild) {
-      const details = document.createElement('div');
-      details.classList.add('cards-card-details');
-      cell.classList.add('cards-card');
-      while (cell.firstChild) details.append(cell.firstChild);
-      const picture = details.querySelector('picture');
-      if (picture) {
-        cell.prepend(picture);
-      } else if (details.querySelector('h3')) {
-        cell.classList.add('cards-card-highlight');
-      }
-      cell.append(details);
-      observer.observe(cell);
-    }
+export default function decorate(block) {
+  /* change to ul, li */
+  const ul = document.createElement('ul');
+  [...block.children].forEach((row) => {
+    const li = document.createElement('li');
+    li.innerHTML = row.innerHTML;
+    [...li.children].forEach((div) => {
+      if (div.children.length === 1 && div.querySelector('picture')) div.className = 'cards-card-image';
+      else div.className = 'cards-card-body';
+    });
+    ul.append(li);
   });
+  ul.querySelectorAll('img').forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
+  block.textContent = '';
+  block.append(ul);
 }
