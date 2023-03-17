@@ -164,7 +164,6 @@ function createHidden(fd) {
   input.type = 'hidden';
   input.id = fd.Id;
   input.name = fd.Name;
-  input.value = fd.Value;
   return input;
 }
 
@@ -210,6 +209,7 @@ async function fetchData(url) {
   return json.data.map((fd) => ({
     ...fd,
     Id: fd.Id || getId(fd.Name),
+    Value: fd.Value || ""
   }));
 }
 
