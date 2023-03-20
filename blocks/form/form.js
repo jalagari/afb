@@ -1,3 +1,5 @@
+import { readBlockConfig, toCamelCase } from '../../scripts/lib-franklin.js';
+
 const formatFns = await (async function imports() {
   try {
     const formatters = await import('./formatting.js');
@@ -14,6 +16,8 @@ function constructPayload(form) {
   [...form.elements].forEach((fe) => {
     if (fe.type === 'checkbox') {
       if (fe.checked) payload[fe.id] = fe.value;
+    } else if(fe.type === 'file') {
+      payload[fe.id] = fe.dataset?.value;
     } else if (fe.id) {
       payload[fe.id] = fe.value;
     }
@@ -167,6 +171,42 @@ function createHidden(fd) {
   return input;
 }
 
+const uploadFile = async (fileInput, fileUploadUrl) => {
+  // Currently supporting single file upload
+  if(fileInput && fileInput?.files?.length > 0 && fileUploadUrl) {
+    let formData = new FormData();  
+    formData.append("file", fileInput.files[0]);
+    let init = {
+      method: 'POST',
+      body: formData
+    }
+    let response = await fetch(fileUploadUrl, init);
+    let result = await response.text();
+    fileInput.dataset.value = result;
+    return response.ok
+  }
+}
+
+function createFile(fd) {
+  const field = createFieldWrapper(fd);
+  const fileInput = createInput(fd);
+  const status = document.createElement('span');
+  status.className = 'field-status'
+
+  field.append(fileInput);
+  field.append(status);
+  fileInput.onchange = (async (event) => {
+      const form = fileInput?.closest("form");
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton ? submitButton.disabled = true : null;
+      status.textContent = "Uploading..." // TODO - localization
+      const resp = await uploadFile(fileInput, form.dataset.fileuploadurl);
+      submitButton ? submitButton.disabled = false : null;
+      status.textContent = resp ? "Uploaded Successfully" : "Upload failed";
+  })
+  return field;
+}
+
 const getId = (function getId() {
   const ids = {};
   return (name) => {
@@ -186,6 +226,7 @@ const fieldRenderers = {
   button: createButton,
   output: createOutput,
   hidden: createHidden,
+  file: createFile
 };
 
 function renderField(fd) {
@@ -250,8 +291,20 @@ async function createForm(formURL) {
 }
 
 export default async function decorate(block) {
-  const form = block.querySelector('a[href$=".json"]');
-  if (form) {
-    form.replaceWith(await createForm(form.href));
+  const config = readBlockConfig(block);
+  const formLink = block.querySelector('a[href$=".json"]');
+  if (formLink) {
+    const form = await createForm(formLink.href);
+    formLink.replaceWith(form);
+
+    // store configuration in form
+    Object.keys(config).forEach((key) => {
+      form.dataset[toCamelCase(key)] = config[key];
+    });
+
+    // delete configuration nodes
+    while (block.childElementCount > 1) {
+      block.removeChild(block.lastElementChild);
+  }
   }
 }
