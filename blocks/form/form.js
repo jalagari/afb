@@ -223,9 +223,8 @@ async function createForm(formURL) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
   const form = document.createElement('form');
-  const fields = data
-    .map((fd) => ({ fd, el: renderField(fd) }));
-  fields.forEach(({ fd, el }) => {
+  data.forEach((fd) => {
+    const el = renderField(fd);
     const input = el.querySelector('input,text-area,select');
     if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
       input.setAttribute('required', 'required');
@@ -238,8 +237,8 @@ async function createForm(formURL) {
         input.setAttribute('aria-describedby', `${fd.Id}-description`);
       }
     }
+    form.append(el);
   });
-  form.append(...fields.map(({ el }) => el));
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
   form.addEventListener('submit', (e) => {
