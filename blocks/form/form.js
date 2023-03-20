@@ -38,8 +38,7 @@ async function handleSubmit(form, redirectTo) {
   if (form.getAttribute('data-submitting') !== 'true') {
     form.setAttribute('data-submitting', 'true');
     await submitForm(form);
-    const redirectLocation = redirectTo || form.getAttribute('data-redirect');
-    window.location.href = redirectLocation;
+    window.location.href = redirectTo || "thankyou";
   }
 }
 
@@ -96,7 +95,7 @@ function createButton(fd) {
   button.textContent = fd.Label;
   button.type = fd.Type;
   button.classList.add('button');
-  button.setAttribute('data-redirect', fd.Extra);
+  button.dataset.redirect = fd.Extra || "";
   button.id = fd.Id;
   button.name = fd.Name;
   wrapper.replaceChildren(button);
@@ -246,7 +245,7 @@ async function createForm(formURL) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.submitter.setAttribute('disabled', '');
-    handleSubmit(form, e.submitter.getAttribute('data-redirect'));
+    handleSubmit(form, e.submitter.dataset?.redirect);
   });
   return form;
 }
