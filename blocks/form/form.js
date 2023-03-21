@@ -1,3 +1,6 @@
+import { readBlockConfig, toCamelCase } from '../../scripts/lib-franklin.js';
+import uploadFile from './uploadfile.js';
+
 const formatFns = await (async function imports() {
   try {
     const formatters = await import('./formatting.js');
@@ -14,6 +17,8 @@ function constructPayload(form) {
   [...form.elements].forEach((fe) => {
     if (fe.type === 'checkbox') {
       if (fe.checked) payload[fe.id] = fe.value;
+    } else if (fe.type === 'file') {
+      payload[fe.id] = fe.dataset?.value;
     } else if (fe.id) {
       payload[fe.id] = fe.value;
     }
@@ -38,8 +43,7 @@ async function handleSubmit(form, redirectTo) {
   if (form.getAttribute('data-submitting') !== 'true') {
     form.setAttribute('data-submitting', 'true');
     await submitForm(form);
-    const redirectLocation = redirectTo || form.getAttribute('data-redirect');
-    window.location.href = redirectLocation;
+    window.location.href = redirectTo || 'thankyou';
   }
 }
 
@@ -96,7 +100,7 @@ function createButton(fd) {
   button.textContent = fd.Label;
   button.type = fd.Type;
   button.classList.add('button');
-  button.setAttribute('data-redirect', fd.Extra);
+  button.dataset.redirect = fd.Extra || '';
   button.id = fd.Id;
   button.name = fd.Name;
   wrapper.replaceChildren(button);
@@ -168,6 +172,26 @@ function createHidden(fd) {
   return input;
 }
 
+function createFile(fd) {
+  const field = createFieldWrapper(fd);
+  const fileInput = createInput(fd);
+  const status = document.createElement('span');
+  status.className = 'field-status';
+
+  field.append(fileInput);
+  field.append(status);
+  fileInput.addEventListener('change', async () => {
+    const form = fileInput?.closest('form');
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+    status.textContent = 'Uploading...'; // TODO - localization
+    const resp = await uploadFile(fileInput, form.dataset.fileuploadurl);
+    if (submitButton) submitButton.disabled = false;
+    status.textContent = resp ? 'Uploaded Successfully' : 'Upload failed';
+  });
+  return field;
+}
+
 const getId = (function getId() {
   const ids = {};
   return (name) => {
@@ -187,6 +211,7 @@ const fieldRenderers = {
   button: createButton,
   output: createOutput,
   hidden: createHidden,
+  file: createFile,
 };
 
 function renderField(fd) {
@@ -210,6 +235,7 @@ async function fetchData(url) {
   return json.data.map((fd) => ({
     ...fd,
     Id: fd.Id || getId(fd.Name),
+    Value: fd.Value || '',
   }));
 }
 
@@ -223,9 +249,8 @@ async function createForm(formURL) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
   const form = document.createElement('form');
-  const fields = data
-    .map((fd) => ({ fd, el: renderField(fd) }));
-  fields.forEach(({ fd, el }) => {
+  data.forEach((fd) => {
+    const el = renderField(fd);
     const input = el.querySelector('input,text-area,select');
     if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
       input.setAttribute('required', 'required');
@@ -238,21 +263,33 @@ async function createForm(formURL) {
         input.setAttribute('aria-describedby', `${fd.Id}-description`);
       }
     }
+    form.append(el);
   });
-  form.append(...fields.map(({ el }) => el));
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.submitter.setAttribute('disabled', '');
-    handleSubmit(form, e.submitter.getAttribute('data-redirect'));
+    handleSubmit(form, e.submitter.dataset?.redirect);
   });
   return form;
 }
 
 export default async function decorate(block) {
-  const form = block.querySelector('a[href$=".json"]');
-  if (form) {
-    form.replaceWith(await createForm(form.href));
+  const config = readBlockConfig(block);
+  const formLink = block.querySelector('a[href$=".json"]');
+  if (formLink) {
+    const form = await createForm(formLink.href);
+    formLink.replaceWith(form);
+
+    // store configuration in form
+    Object.keys(config).forEach((key) => {
+      form.dataset[toCamelCase(key)] = config[key];
+    });
+
+    // delete configuration nodes
+    while (block.childElementCount > 1) {
+      block.removeChild(block.lastElementChild);
+    }
   }
 }
