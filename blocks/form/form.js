@@ -1,5 +1,5 @@
 import { readBlockConfig, toCamelCase } from '../../scripts/lib-franklin.js';
-import { uploadFile } from './uploadfile.js';
+import uploadFile from './uploadfile.js';
 
 const formatFns = await (async function imports() {
   try {
@@ -17,7 +17,7 @@ function constructPayload(form) {
   [...form.elements].forEach((fe) => {
     if (fe.type === 'checkbox') {
       if (fe.checked) payload[fe.id] = fe.value;
-    } else if(fe.type === 'file') {
+    } else if (fe.type === 'file') {
       payload[fe.id] = fe.dataset?.value;
     } else if (fe.id) {
       payload[fe.id] = fe.value;
@@ -43,7 +43,7 @@ async function handleSubmit(form, redirectTo) {
   if (form.getAttribute('data-submitting') !== 'true') {
     form.setAttribute('data-submitting', 'true');
     await submitForm(form);
-    window.location.href = redirectTo || "thankyou";
+    window.location.href = redirectTo || 'thankyou';
   }
 }
 
@@ -100,7 +100,7 @@ function createButton(fd) {
   button.textContent = fd.Label;
   button.type = fd.Type;
   button.classList.add('button');
-  button.dataset.redirect = fd.Extra || "";
+  button.dataset.redirect = fd.Extra || '';
   button.id = fd.Id;
   button.name = fd.Name;
   wrapper.replaceChildren(button);
@@ -176,19 +176,19 @@ function createFile(fd) {
   const field = createFieldWrapper(fd);
   const fileInput = createInput(fd);
   const status = document.createElement('span');
-  status.className = 'field-status'
+  status.className = 'field-status';
 
   field.append(fileInput);
   field.append(status);
-  fileInput.addEventListener('change', async (event) => {
-    const form = fileInput?.closest("form");
+  fileInput.addEventListener('change', async () => {
+    const form = fileInput?.closest('form');
     const submitButton = form.querySelector('button[type="submit"]');
-    submitButton ? submitButton.disabled = true : null;
-    status.textContent = "Uploading..." // TODO - localization
+    if (submitButton) submitButton.disabled = true;
+    status.textContent = 'Uploading...'; // TODO - localization
     const resp = await uploadFile(fileInput, form.dataset.fileuploadurl);
-    submitButton ? submitButton.disabled = false : null;
-    status.textContent = resp ? "Uploaded Successfully" : "Upload failed";
-  })
+    if (submitButton) submitButton.disabled = false;
+    status.textContent = resp ? 'Uploaded Successfully' : 'Upload failed';
+  });
   return field;
 }
 
@@ -211,7 +211,7 @@ const fieldRenderers = {
   button: createButton,
   output: createOutput,
   hidden: createHidden,
-  file: createFile
+  file: createFile,
 };
 
 function renderField(fd) {
@@ -235,7 +235,7 @@ async function fetchData(url) {
   return json.data.map((fd) => ({
     ...fd,
     Id: fd.Id || getId(fd.Name),
-    Value: fd.Value || ""
+    Value: fd.Value || '',
   }));
 }
 
@@ -290,6 +290,6 @@ export default async function decorate(block) {
     // delete configuration nodes
     while (block.childElementCount > 1) {
       block.removeChild(block.lastElementChild);
-  }
+    }
   }
 }
