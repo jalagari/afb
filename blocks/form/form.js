@@ -64,8 +64,8 @@ function setNumberConstraints(element, fd) {
     element.step = fd.Step || 1;
   }
 }
-function createLabel(fd) {
-  const label = document.createElement('label');
+function createLabel(fd, tagName = 'label') {
+  const label = document.createElement(tagName);
   label.setAttribute('for', fd.Id);
   label.className = 'field-label';
   label.textContent = fd.Label || '';
@@ -89,6 +89,7 @@ function createFieldWrapper(fd, tagName = 'div') {
   const nameStyle = fd.Name ? ` form-${fd.Name}` : '';
   const fieldId = `form-${fd.Type}-wrapper${nameStyle}`;
   fieldWrapper.className = fieldId;
+  fieldWrapper.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
   fieldWrapper.classList.add('field-wrapper');
   fieldWrapper.append(createLabel(fd));
   return fieldWrapper;
@@ -154,6 +155,7 @@ function createRadio(fd) {
 const createOutput = withFieldWrapper((fd) => {
   const output = document.createElement('output');
   output.name = fd.Name;
+  output.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
   const displayFormat = fd['Display Format'];
   if (displayFormat) {
     output.dataset.displayFormat = displayFormat;
@@ -192,6 +194,27 @@ function createFile(fd) {
   return field;
 }
 
+function createLegend(fd) {
+  return createLabel(fd, 'legend');
+}
+
+function createFieldSet(fd) {
+  const wrapper = createFieldWrapper(fd, 'fieldset');
+  wrapper.name = fd.Name;
+  wrapper.replaceChildren(createLegend(fd));
+  return wrapper;
+}
+
+function groupFieldsByFieldSet(form) {
+  const fielsets = form.querySelectorAll('fieldset');
+  fielsets?.forEach((fieldset) => {
+    const fields = form.querySelectorAll(`[data-fieldset="${fieldset.name}"`);
+    fields?.forEach((field) => {
+      fieldset.append(field);
+    });
+  });
+}
+
 const getId = (function getId() {
   const ids = {};
   return (name) => {
@@ -206,12 +229,13 @@ const fieldRenderers = {
   radio: createRadio,
   checkbox: createRadio,
   submit: createButton,
-  'text-area': createTextArea,
+  textarea: createTextArea,
   select: createSelect,
   button: createButton,
   output: createOutput,
   hidden: createHidden,
   file: createFile,
+  fieldset: createFieldSet,
 };
 
 function renderField(fd) {
@@ -251,7 +275,7 @@ async function createForm(formURL) {
   const form = document.createElement('form');
   data.forEach((fd) => {
     const el = renderField(fd);
-    const input = el.querySelector('input,text-area,select');
+    const input = el.querySelector('input,textarea,select');
     if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
       input.setAttribute('required', 'required');
     }
@@ -265,6 +289,7 @@ async function createForm(formURL) {
     }
     form.append(el);
   });
+  groupFieldsByFieldSet(form);
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
   form.addEventListener('submit', (e) => {
