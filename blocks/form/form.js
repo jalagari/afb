@@ -206,8 +206,8 @@ function createFieldSet(fd) {
 }
 
 function groupFieldsByFieldSet(form) {
-  const fielsets = form.querySelectorAll('fieldset');
-  fielsets?.forEach((fieldset) => {
+  const fieldsets = form.querySelectorAll('fieldset');
+  fieldsets?.forEach((fieldset) => {
     const fields = form.querySelectorAll(`[data-fieldset="${fieldset.name}"`);
     fields?.forEach((field) => {
       fieldset.append(field);
