@@ -215,6 +215,15 @@ function groupFieldsByFieldSet(form) {
   });
 }
 
+function createPlainText(fd) {
+  const paragraph = document.createElement('p');
+  const nameStyle = fd.Name ? `form-${fd.Name}` : '';
+  paragraph.className = nameStyle;
+  paragraph.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
+  paragraph.textContent = fd.Label;
+  return paragraph;
+}
+
 const getId = (function getId() {
   const ids = {};
   return (name) => {
@@ -236,6 +245,7 @@ const fieldRenderers = {
   hidden: createHidden,
   file: createFile,
   fieldset: createFieldSet,
+  plaintext: createPlainText,
 };
 
 function renderField(fd) {
