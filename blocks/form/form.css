@@ -2,6 +2,8 @@
     --form-invalid-border-color: #ff5f3f;
     --link-color: #035fe6;
     --form-label-color: #666;
+    --form-input-border-color: #ECECEC;
+    --form-input-background-color: #F7F7F7;
 }
 
 main .form {
@@ -12,7 +14,12 @@ main .form {
 main .form form {
     display: grid;
     grid-template-columns: 1fr;
-    column-gap: 130px;
+}
+
+main .form form fieldset {
+    border: 0px;
+    width: 100%;
+    margin: 0px;
 }
 
 main .form form .field-wrapper {
@@ -62,19 +69,23 @@ main .form .field-description {
 main .form input,
 main .form textarea,
 main .form select {
-    border: 1px solid rgb(193 193 195);
+    background-color: var(--form-input-background-color);
+    border: 1px solid var(--form-input-border-color);
     width: calc(100% - 16px);
     height: 40px;
     color: var(--form-label-color);;
     margin-top: 10px;
     padding-left: 10px;
     font-size: 1rem;
+    max-width: unset;
 }
 
 main .form input[type='checkbox'],
 main .form input[type='radio'] {
     width: auto;
     height: auto;
+    margin: 10px;
+    float: left;
 }
 
 main .form textarea {
@@ -85,14 +96,15 @@ main .form input:hover,
 main .form select:hover {
     border-color: rgb(90 92 96);
 }
-
+main .form fieldset legend,
 main .form label {
     width: 100%;
+    font-weight: bold;
     font-size: var(--body-font-size-s);
-    line-height: var(--type-body-s-lh);
     padding-bottom: var(--spacing-xs);
     box-sizing: border-box;
-    color: var(--form-label-color);;
+    color: var(--form-label-color);
+    margin: 1rem 0;
 }
 
 main .form label.required::after {
@@ -101,13 +113,13 @@ main .form label.required::after {
     padding-left: 5px;
 }
 
-main .form .form-checkbox-wrapper {
-    margin: var(--spacing-s) 0;
+main .form form .form-checkbox-wrapper,
+main .form form .form-radio-wrapper{
+  margin: 0;
 }
-
+main .form .form-radio-wrapper  label,
 main .form .form-checkbox-wrapper label {
-    font-size: var(--body-font-size-m);
-    line-height: var(--type-body-m-lh);
+    font-size: var(--body-font-size-xs);
     font-weight: normal;
     text-transform: none;
 }
@@ -123,18 +135,14 @@ main .form .button:disabled {
 
 main .form .button {
     color: #fff;
-    cursor: pointer;
     background: var(--link-color);
-    margin-top: 20px;
-    padding: 0 1rem;
-    font-size: 1rem;
+    padding: 1rem;
+    font-size: var(--body-font-size-s);
     font-weight: bold;
-    position: relative;
-    border: 1px transparent
+    border-radius: unset;
 }
 
 main form .field-wrapper > p {
-    line-height: 1.4;
     font-size: .875rem;
     padding-top: 5px;
     display: inline-block;
@@ -155,7 +163,6 @@ main form .field-wrapper > p {
   
      form {
         width: unset;
-        column-gap: 30px;
         flex-flow: wrap row;
     }
   }
@@ -171,10 +178,6 @@ main form .field-wrapper > p {
         row-gap: 58px;
     }
   
-    form {
-       column-gap: 130px;
-   }
-  
      h5 {
         font-size: 20px;
         line-height: 28px;
@@ -185,19 +188,11 @@ main form .field-wrapper > p {
 
     main .form form {
         grid-template-columns: 1fr 1fr;
+        column-gap: 50px;
     }
     
     .form-container {
         max-width: 1140px;
     }
   }
-
-  main .form form .form-radio-wrapper{
-    margin: 0;
-  }
-
-.form-submit-wrapper button{
-    padding: 0 20px;
-    line-height: 4em;
-    text-transform: uppercase;
-}
+  
