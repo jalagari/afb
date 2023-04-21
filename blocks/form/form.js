@@ -1,24 +1,10 @@
-import { readBlockConfig, toCamelCase } from '../../scripts/lib-franklin.js';
-import uploadFile from './uploadfile.js';
-
-const formatFns = await (async function imports() {
-  try {
-    const formatters = await import('./formatting.js');
-    return formatters.default;
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.log('Formatting library not found. Formatting will not be supported');
-  }
-  return {};
-}());
+import { sampleRUM } from '../../scripts/lib-franklin.js';
 
 function constructPayload(form) {
   const payload = {};
   [...form.elements].forEach((fe) => {
     if (fe.type === 'checkbox') {
       if (fe.checked) payload[fe.id] = fe.value;
-    } else if (fe.type === 'file') {
-      payload[fe.id] = fe.dataset?.value;
     } else if (fe.id) {
       payload[fe.id] = fe.value;
     }
@@ -36,6 +22,7 @@ async function submitForm(form) {
     body: JSON.stringify({ data: payload }),
   });
   await resp.text();
+  sampleRUM('form:submit');
   return payload;
 }
 
@@ -156,12 +143,7 @@ const createOutput = withFieldWrapper((fd) => {
   const output = document.createElement('output');
   output.name = fd.Name;
   output.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
-  const displayFormat = fd['Display Format'];
-  if (displayFormat) {
-    output.dataset.displayFormat = displayFormat;
-  }
-  const formatFn = formatFns[displayFormat] || ((x) => x);
-  output.innerText = formatFn(fd.Value);
+  output.innerText = fd.Value;
   return output;
 });
 
@@ -172,26 +154,6 @@ function createHidden(fd) {
   input.name = fd.Name;
   input.value = fd.Value;
   return input;
-}
-
-function createFile(fd) {
-  const field = createFieldWrapper(fd);
-  const fileInput = createInput(fd);
-  const status = document.createElement('span');
-  status.className = 'field-status';
-
-  field.append(fileInput);
-  field.append(status);
-  fileInput.addEventListener('change', async () => {
-    const form = fileInput?.closest('form');
-    const submitButton = form.querySelector('button[type="submit"]');
-    if (submitButton) submitButton.disabled = true;
-    status.textContent = 'Uploading...'; // TODO - localization
-    const resp = await uploadFile(fileInput, form.dataset.fileuploadurl);
-    if (submitButton) submitButton.disabled = false;
-    status.textContent = resp ? 'Uploaded Successfully' : 'Upload failed';
-  });
-  return field;
 }
 
 function createLegend(fd) {
@@ -243,7 +205,6 @@ const fieldRenderers = {
   button: createButton,
   output: createOutput,
   hidden: createHidden,
-  file: createFile,
   fieldset: createFieldSet,
   plaintext: createPlainText,
 };
@@ -311,20 +272,9 @@ async function createForm(formURL) {
 }
 
 export default async function decorate(block) {
-  const config = readBlockConfig(block);
   const formLink = block.querySelector('a[href$=".json"]');
   if (formLink) {
     const form = await createForm(formLink.href);
     formLink.replaceWith(form);
-
-    // store configuration in form
-    Object.keys(config).forEach((key) => {
-      form.dataset[toCamelCase(key)] = config[key];
-    });
-
-    // delete configuration nodes
-    while (block.childElementCount > 1) {
-      block.removeChild(block.lastElementChild);
-    }
   }
 }
