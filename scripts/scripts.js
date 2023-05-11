@@ -44,6 +44,29 @@ function buildAutoBlocks(main) {
   }
 }
 
+export function addAnchorLink(elem) {
+  const link = document.createElement('a');
+  link.setAttribute('href', `#${elem.id || ''}`);
+  link.setAttribute('title', `Copy link to "${elem.textContent}" to clipboard`);
+  link.classList.add('anchor-link');
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(link.href);
+    window.location.href = link.href;
+    e.target.classList.add('anchor-link-copied');
+    setTimeout(() => e.target.classList.remove('anchor-link-copied'), 1000);
+  });
+  link.innerHTML = elem.innerHTML;
+  elem.innerHTML = '';
+  elem.append(link);
+}
+
+export function decorateHeadings(main) {
+  main.querySelectorAll('h2, h3, h4, h5, h6').forEach((h) => {
+    addAnchorLink(h);
+  });
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -53,6 +76,7 @@ export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
+  decorateHeadings(main);
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
