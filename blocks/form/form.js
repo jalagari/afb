@@ -16,8 +16,12 @@ function loadScript(url) {
   return script;
 }
 
+function generateUnique() {
+  return new Date().valueOf() + Math.random();
+}
+
 function constructPayload(form) {
-  const payload = {};
+  const payload = { __id__: generateUnique() };
   const attachments = {};
   [...form.elements].forEach((fe) => {
     if (fe.type === 'checkbox') {
