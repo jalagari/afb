@@ -1,6 +1,7 @@
 :root {
     --background-color-primary: #fff;
     --label-color: #666;
+    --border-color: #818a91;
     --button-primary-color: #5F8DDA;
     --button-primary-hover-color: #035fe6;
     --form-font-size-m: 22px;
@@ -13,9 +14,9 @@
     --form-invalid-border-color: #ff5f3f;
     --form-input-padding: 0.75rem 0.6rem;
     --form-input-font-size: 1rem;
-    --form-input-disable-color: var(--mt-global-color-silver);
+    --form-input-disable-color: var(--label-color);
     --form-input-border-size: 1px;
-    --form-input-border-color: var(--mt-global-color-oslo-gray);
+    --form-input-border-color: var(--border-color);
     --form-input-background-color: var(--background-color-primary);
     --form-paragraph-color: var(--label-color);
     --form-paragraph-margin: 0 0 0.9rem;
