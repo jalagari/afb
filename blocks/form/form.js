@@ -1,4 +1,4 @@
-// import { sampleRUM } from '../../scripts/lib-franklin.js';
+import { sampleRUM } from '../../scripts/lib-franklin.js';
 
 const SITE_KEY = '6LcB318mAAAAAO6smzDd-TtD1-AWlidsHsCXcJHy';
 const FORM_SUBMIT_ENDPOINT = 'https://franklin-submit-wrapper.adobeaem.workers.dev';
@@ -70,7 +70,7 @@ async function submitForm(form, token) {
       ...prepareRequest(form, token),
     });
     if (response.ok) {
-      // sampleRUM('form:submit'); // TODO - commenting as loading block in wknd fail.
+      sampleRUM('form:submit');
       window.location.href = form.dataset?.redirect || 'thankyou';
     } else {
       const error = await response.text();
