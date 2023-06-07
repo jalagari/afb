@@ -1,5 +1,5 @@
 indices:
-  default:
+  docs:
     include:
       - /docs/**
     target: /docs/query-index.json

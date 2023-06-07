@@ -43,10 +43,10 @@ export async function fetchBlogArticleIndex() {
 
 async function filterArticles(config, feed, limit, offset) {
   /* filter posts by tags */
-  let { tags } = config;
-  if (tags) {
-    tags = tags.split(',');
-    tags.forEach((t) => t.toLowerCase().trim());
+  let { category } = config;
+  if (category) {
+    category = category.split(',');
+    category.forEach((t) => t.toLowerCase().trim());
   }
 
   while ((feed.data.length < limit + offset) && (!feed.complete)) {
@@ -55,9 +55,9 @@ async function filterArticles(config, feed, limit, offset) {
     const indexChunk = index.data.slice(feed.cursor);
 
     const feedChunk = indexChunk.filter((article) => {
-      if (article.tags) {
-        const articleTags = JSON.parse(article.tags).map((x) => x.toLowerCase().trim());
-        return articleTags.some((tag) => tags.indexOf(tag) > -1);
+      if (article.category) {
+        const articleCategory = JSON.parse(article.category).map((x) => x.toLowerCase().trim());
+        return articleCategory.some((tag) => category.indexOf(tag) > -1);
       }
       return false;
     });
