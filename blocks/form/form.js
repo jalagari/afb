@@ -24,12 +24,16 @@ function constructPayload(form) {
   const payload = { __id__: generateUnique() };
   const attachments = {};
   [...form.elements].forEach((fe) => {
-    if (fe.type === 'checkbox') {
-      if (fe.checked) payload[fe.id] = fe.value;
-    } else if (fe.type === 'file' && fe.files?.length > 0) {
-      attachments[fe.name] = fe.files;
-    } else if (fe.id) {
-      payload[fe.id] = fe.value;
+    if (fe.name) {
+      if (fe.type === 'radio') {
+        if (fe.checked) payload[fe.name] = fe.value;
+      } else if (fe.type === 'checkbox') {
+        if (fe.checked) payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
+      } else if (fe.type === 'file' && fe.files?.length > 0) {
+        attachments[fe.name] = fe.files;
+      } else {
+        payload[fe.name] = fe.value;
+      }
     }
   });
   return { payload, attachments };
