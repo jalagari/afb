@@ -1,25 +1,32 @@
 import {
   readBlockConfig,
   fetchPlaceholders,
+  createOptimizedPicture,
 } from '../../scripts/lib-franklin.js';
+
+const categoryLocation = {
+  docs: '/docs',
+  'form-template': '/templates/formblock',
+};
 
 export function buildArticleCard(article, type = 'article') {
   const {
-    title, description, path,
+    title, description, path, image,
   } = article;
 
   const card = document.createElement('a');
   card.className = `${type}-card`;
   card.href = path;
-
-  card.innerHTML = `<div class="${type}-card-body">
+  const picture = createOptimizedPicture(image, title, false, [{ width: '400' }]);
+  const div = document.createRange().createContextualFragment(`<div class="${type}-card-body">
       <h3>${title}</h3>
       <p class="${type}-card-description">${description}</p>
-    </div>`;
+    </div>`);
+  card.append(picture, div);
   return card;
 }
 
-export async function fetchBlogArticleIndex() {
+export async function fetchBlogArticleIndex(category) {
   const pageSize = 501;
   window.blogIndex = window.blogIndex || {
     data: [],
@@ -27,9 +34,10 @@ export async function fetchBlogArticleIndex() {
     offset: 0,
     complete: false,
   };
+  const location = categoryLocation?.[category] || '/docs';
   if (window.blogIndex.complete) return (window.blogIndex);
   const index = window.blogIndex;
-  const resp = await fetch(`/query-index.json?limit=${pageSize}&offset=${index.offset}`);
+  const resp = await fetch(`  ${location}/query-index.json?limit=${pageSize}&offset=${index.offset}`);
   const json = await resp.json();
   const complete = (json.limit + json.offset) === json.total;
   json.data.forEach((post) => {
@@ -43,21 +51,17 @@ export async function fetchBlogArticleIndex() {
 
 async function filterArticles(config, feed, limit, offset) {
   /* filter posts by tags */
-  let { category } = config;
-  if (category) {
-    category = category.split(',');
-    category.forEach((t) => t.toLowerCase().trim());
-  }
+  const category = config.category?.toLowerCase()?.trim();
 
   while ((feed.data.length < limit + offset) && (!feed.complete)) {
     // eslint-disable-next-line no-await-in-loop
-    const index = await fetchBlogArticleIndex();
+    const index = await fetchBlogArticleIndex(category);
     const indexChunk = index.data.slice(feed.cursor);
 
     const feedChunk = indexChunk.filter((article) => {
-      if (article.category) {
-        const articleCategory = JSON.parse(article.category).map((x) => x.toLowerCase().trim());
-        return articleCategory.some((tag) => category.indexOf(tag) > -1);
+      if (article.title && article.category) {
+        const articleCategory = article.category.toLowerCase().trim();
+        return articleCategory === category;
       }
       return false;
     });
@@ -94,15 +98,6 @@ async function decorateArticleFeed(
   if (articles.length) {
     // results were found
     emptyDiv.remove();
-  } else if (config.selectedProducts || config.selectedIndustries) {
-    // no user filtered results were found
-    spinner.remove();
-    const noMatches = document.createElement('p');
-    noMatches.innerHTML = `<strong>${placeholders['no-matches']}</strong>`;
-    const userHelp = document.createElement('p');
-    userHelp.classList.add('article-cards-empty-filtered');
-    userHelp.textContent = placeholders['user-help'];
-    emptyDiv.append(noMatches, userHelp);
   } else {
     // no results were found
     spinner.remove();
