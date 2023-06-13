@@ -15,11 +15,17 @@ export function buildArticleCard(article, type = 'article') {
   } = article;
 
   const card = document.createElement('a');
+  card.setAttribute('target', '_blank');
   card.className = `${type}-card`;
   card.href = path;
-  const picture = createOptimizedPicture(image, title, false, [{ width: '400' }]);
+  let picture;
+  if (image.match(/default-meta-image\.png/)) {
+    picture = document.createRange().createContextualFragment('<div class="default-image"></div>');
+  } else {
+    picture = createOptimizedPicture(image, title, false, [{ width: '400' }]);
+  }
   const div = document.createRange().createContextualFragment(`<div class="${type}-card-body">
-      <h3>${title}</h3>
+      <h3>${title.split('|')[0]}</h3>
       <p class="${type}-card-description">${description}</p>
     </div>`);
   card.append(picture, div);
