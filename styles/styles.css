@@ -293,3 +293,7 @@ h5 > a:hover::before {
   position: absolute;
   margin-left: -20px;
 }
+
+* {
+  box-sizing: border-box;
+}

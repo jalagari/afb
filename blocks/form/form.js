@@ -1,21 +1,5 @@
 import { sampleRUM } from '../../scripts/lib-franklin.js';
 
-const SITE_KEY = '6LcB318mAAAAAO6smzDd-TtD1-AWlidsHsCXcJHy';
-const FORM_SUBMIT_ENDPOINT = 'https://franklin-submit-wrapper.adobeaem.workers.dev';
-
-function loadScript(url) {
-  const head = document.querySelector('head');
-  let script = head.querySelector(`script[src="${url}"]`);
-  if (!script) {
-    script = document.createElement('script');
-    script.src = url;
-    script.async = true;
-    head.append(script);
-    return script;
-  }
-  return script;
-}
-
 function generateUnique() {
   return new Date().valueOf() + Math.random();
 }
@@ -68,7 +52,7 @@ function prepareRequest(form, token) {
 
 async function submitForm(form, token) {
   try {
-    const url = `${FORM_SUBMIT_ENDPOINT}${form.dataset.action}`;
+    const url = form.dataset.action;
     const response = await fetch(url, {
       method: 'POST',
       ...prepareRequest(form, token),
@@ -88,16 +72,7 @@ async function submitForm(form, token) {
 async function handleSubmit(form) {
   if (form.getAttribute('data-submitting') !== 'true') {
     form.setAttribute('data-submitting', 'true');
-    const { grecaptcha } = window;
-    if (grecaptcha) {
-      grecaptcha.ready(() => {
-        grecaptcha.execute(SITE_KEY, { action: 'submit' }).then(async (token) => {
-          await submitForm(form, token);
-        });
-      });
-    } else {
-      await submitForm(form);
-    }
+    await submitForm(form);
   }
 }
 
@@ -143,7 +118,12 @@ function createFieldWrapper(fd, tagName = 'div') {
   const nameStyle = fd.Name ? ` form-${fd.Name}` : '';
   const fieldId = `form-${fd.Type}-wrapper${nameStyle}`;
   fieldWrapper.className = fieldId;
-  fieldWrapper.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
+  if (fd.Fieldset) {
+    fieldWrapper.dataset.fieldset = fd.Fieldset;
+  }
+  if (fd.Mandatory.toLowerCase() === 'true') {
+    fieldWrapper.dataset.required = '';
+  }
   fieldWrapper.classList.add('field-wrapper');
   fieldWrapper.append(createLabel(fd));
   return fieldWrapper;
@@ -163,17 +143,6 @@ function createButton(fd) {
 }
 function createSubmit(fd) {
   const wrapper = createButton(fd);
-  if (SITE_KEY) {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          loadScript(`https://www.google.com/recaptcha/api.js?render=${SITE_KEY}`);
-          obs.disconnect();
-        }
-      });
-    });
-    obs.observe(wrapper);
-  }
   return wrapper;
 }
 
