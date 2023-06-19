@@ -1,6 +1,6 @@
 name: Processor for Forms submission events
 
-on: [form-data-received]
+on: [repository_dispatch]
 
 jobs:
   build:
