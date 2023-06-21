@@ -8,4 +8,4 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: 'echo "secret: ${{ secrets.TEST_SECRET }}"'
-    - run: 'echo "payload: ${{ github.event }}"'
+    - run: 'echo "payload: ${{ toJson(github.event) }}"'
