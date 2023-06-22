@@ -16,4 +16,4 @@ jobs:
           azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           azure-resource: ${{ secrets.AZURE_RESOURCE }}
       - name: Get the outpus
-        run: echo "The result of processing was ${{ steps.hello.data-processor.processing-result }}"
+        run: echo "The result of processing was ${{ steps.data-processor.processing-result }}"
