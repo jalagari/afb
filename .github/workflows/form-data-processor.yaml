@@ -2,7 +2,7 @@ name: Processor for Forms submission events
 
 on:
   repository_dispatch:
-    types: [form-data-receive]
+    types: [form-data-received]
 
 jobs:
   build:
