@@ -6,7 +6,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - run: 'echo "secret: ${{ secrets.TEST_SECRET }}"'
-    - run: 'echo "payload: ${{ github.event.client_payload.status }}"'
-    - run: 'echo "payload: ${{ github.event.client_payload.path }}"'
+      - name: Form data processor action
+        id: data-processor
+        uses: adobe/afb/actions/form-data-processor@4b1236d6a15512344f20cc97e9945b688125b134
+        with:
+          azure-client-id: 'Dummy ID'
+      - name: Get the outpus
+        run: echo "The result of processing was ${{ steps.hello.data-processor.processing-result }}"
