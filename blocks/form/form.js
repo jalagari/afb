@@ -1,4 +1,4 @@
-import { sampleRUM } from '../../scripts/lib-franklin.js';
+import { readBlockConfig, sampleRUM } from '../../scripts/lib-franklin.js';
 
 function generateUnique() {
   return new Date().valueOf() + Math.random();
@@ -13,9 +13,7 @@ function constructPayload(form) {
         if (fe.checked) payload[fe.name] = fe.value;
       } else if (fe.type === 'checkbox') {
         if (fe.checked) payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
-      } else if (fe.type === 'file' && fe.files?.length > 0) {
-        attachments[fe.name] = fe.files;
-      } else {
+      } else if (fe.type !== 'file') {
         payload[fe.name] = fe.value;
       }
     }
@@ -29,33 +27,23 @@ async function submissionFailure(error, form) {
   form.querySelector('button[type="submit"]').disabled = false;
 }
 
-function prepareRequest(form, token) {
-  const { payload, attachments } = constructPayload(form);
-  let headers = {
+async function prepareRequest(form, token) {
+  const { payload } = constructPayload(form);
+  const headers = {
     'Content-Type': 'application/json',
   };
-  let body = JSON.stringify({ data: payload, token });
-  if (attachments && Object.keys(attachments).length > 0) {
-    headers = {};
-    body = new FormData();
-    const fileNames = [];
-    Object.entries(attachments).forEach(([dataRef, files]) => {
-      fileNames.push(dataRef);
-      [...files].forEach((file) => body.append(dataRef, file));
-    });
-    body.append('token', token);
-    body.append('fileFields', JSON.stringify(fileNames));
-    body.append('data', JSON.stringify(payload));
-  }
-  return { headers, body };
+  const body = JSON.stringify({ data: payload, token });
+  const url = form.dataset.action;
+  return { headers, body, url };
 }
 
 async function submitForm(form, token) {
   try {
-    const url = form.dataset.action;
+    const { headers, body, url } = await prepareRequest(form, token);
     const response = await fetch(url, {
       method: 'POST',
-      ...prepareRequest(form, token),
+      headers,
+      body,
     });
     if (response.ok) {
       sampleRUM('form:submit');
@@ -82,17 +70,26 @@ function setPlaceholder(element, fd) {
   }
 }
 
-function setNumberConstraints(element, fd) {
-  if (fd.Max) {
-    element.max = fd.Max;
-  }
-  if (fd.Min) {
-    element.min = fd.Min;
-  }
-  if (fd.Step) {
-    element.step = fd.Step || 1;
+const constraintsDef = Object.entries({
+  'email|text': [['Max', 'maxlength'], ['Min', 'minlength']],
+  'number|range|date': ['Max', 'Min', 'Step'],
+  file: ['Accept', 'Multiple'],
+}).flatMap(([types, constraintDef]) => types.split('|')
+  .map((type) => [type, constraintDef.map((cd) => (Array.isArray(cd) ? cd : [cd, cd]))]));
+
+const constraintsObject = Object.fromEntries(constraintsDef);
+
+function setConstraints(element, fd) {
+  const constraints = constraintsObject[fd.Type];
+  if (constraints) {
+    constraints
+      .filter(([nm]) => fd[nm])
+      .forEach(([nm, htmlNm]) => {
+        element.setAttribute(htmlNm, fd[nm]);
+      });
   }
 }
+
 function createLabel(fd, tagName = 'label') {
   const label = document.createElement(tagName);
   label.setAttribute('for', fd.Id);
@@ -150,7 +147,7 @@ function createInput(fd) {
   const input = document.createElement('input');
   input.type = fd.Type;
   setPlaceholder(input, fd);
-  setNumberConstraints(input, fd);
+  setConstraints(input, fd);
   return input;
 }
 
@@ -291,7 +288,11 @@ async function fetchForm(pathname) {
   return jsonData;
 }
 
-async function createForm(formURL) {
+async function decorateComponents() {
+  return undefined;
+}
+
+async function createForm(formURL, config) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
   const form = document.createElement('form');
@@ -312,6 +313,7 @@ async function createForm(formURL) {
     form.append(el);
   });
   groupFieldsByFieldSet(form);
+  await decorateComponents(form, config);
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
   form.addEventListener('submit', (e) => {
@@ -323,9 +325,10 @@ async function createForm(formURL) {
 }
 
 export default async function decorate(block) {
+  const config = readBlockConfig(block);
   const formLink = block.querySelector('a[href$=".json"]');
   if (formLink) {
-    const form = await createForm(formLink.href);
+    const form = await createForm(formLink.href, config);
     formLink.replaceWith(form);
   }
 }

@@ -78,10 +78,10 @@ main .form .field-description {
     font-size: var(--form-font-size-xs);
 }
 
-main .form :is(input, textarea, select) {
+main .form input, main .form textarea, main .form select {
     background-color: var(--form-input-background-color);
     border: var(--form-input-border-size) solid var(--form-input-border-color);
-    width: calc(100% - 16px);
+    width: 100%;
     height: 42px;
     color: var(--form-label-color);
     padding: var(--form-input-padding);
@@ -91,6 +91,7 @@ main .form :is(input, textarea, select) {
 
 main .form input[type='file'] {
     border: none;
+    padding-left:0;
 }
 
 main .form input[type='checkbox'],
@@ -105,7 +106,7 @@ main .form textarea {
     min-height: 100px;
 }
 
-main .form :is(input:hover, select:hover) {
+main .form input:hover, main .form select:hover {
     border-color: rgb(90 92 96);
 }
 
@@ -116,14 +117,11 @@ main .form fieldset legend {
     border-bottom: var(--form-fieldset-legend-border);
     width: 100%;
     padding: var(--form-fieldset-legend-padding);
+    margin-bottom: 10px;
 }
 
 main .innovate form > fieldset > legend {
     text-align: center;
-}
-
-main .form fieldset legend:has(div.form-radio-wrapper) {
-    border-bottom: 0;
 }
 
 main .form label {
@@ -151,15 +149,16 @@ main .form form p {
     margin: var(--form-paragraph-margin);
 }
 
-main .form form fieldset > :is(.form-radio-wrapper:first-of-type, .form-checkbox-wrapper:first-of-type) {
-    margin: var(--form-field-gap);
+main .form form .form-checkbox-wrapper, main .form form .form-radio-wrapper {
+    display: flex;
+    align-items: baseline;
+    margin: 0;
+    gap: 8px;
 }
 
-main .form form :is(.form-checkbox-wrapper, .form-radio-wrapper){
-  display: flex;
-  align-items: baseline;
-  margin: 0;
-  gap: 8px;
+main .form form fieldset > .form-radio-wrapper:first-of-type,
+main .form form fieldset > .form-checkbox-wrapper:first-of-type {
+    margin: var(--form-field-gap);
 }
 
 main .form .form-radio-wrapper  label,
@@ -193,7 +192,10 @@ main .form-submit-wrapper{
     width: var(--form-submit-width);
 }
 
-main .form :is(input:disabled, textarea:disabled, select:disabled, button:disabled) {
+main .form input:disabled,
+main .form textarea:disabled,
+main .form select:disabled,
+main .form button:disabled {
     background-color: var(--form-input-disable-color);
 }
 
@@ -226,10 +228,9 @@ main .form :is(input:disabled, textarea:disabled, select:disabled, button:disabl
 }
 
 main form .form-fieldset-wrapper {
-    grid-column: 1/3;
     display: flex;
-    gap: 25px;
     padding: 0;
+    flex-direction: column;
 }
 
 main form .form-fieldset-wrapper > .field-wrapper{
@@ -237,7 +238,15 @@ main form .form-fieldset-wrapper > .field-wrapper{
 }
 
 @media (min-width: 1200px), (min-width: 992px) {
-    main form .form-checkbox-wrapper {
-        grid-column: 1/3;
+    main form .form-checkbox-wrapper,
+    main form .form-textarea-wrapper,
+    main form .form-file-wrapper,
+    main form .form-fieldset-wrapper {
+        grid-column: 1/-1;
+    }
+
+    main form .form-fieldset-wrapper {
+        flex-flow: row wrap;
+        gap: 10px 15px;
     }
 }
