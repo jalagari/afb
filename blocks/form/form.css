@@ -58,9 +58,9 @@ main .form {
 }
 
 main .form form {
-    display: grid;
-    grid-template-columns: repeat(var(--form-columns), 1fr);
-    grid-gap: var(--form-field-vert-gap) var(--form-field-horz-gap);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--form-field-vert-gap) var(--form-field-horz-gap);
 }
 
 main .form form fieldset {
@@ -140,6 +140,7 @@ main .form form p,
 main .form form .field-wrapper {
     margin: var(--form-field-gap);
     color: var(--form-label-color);
+    flex: 1 0 calc(100%/var(--form-columns) - var(--form-field-horz-gap));
 }
 
 main .form form p {
@@ -209,16 +210,6 @@ main .form button:disabled {
     :root {
         --form-width: 740px;
     }
-
-    form {
-        flex-flow: wrap row;
-    }
-}
-
-@media (min-width: 1200px), (min-width: 992px) {
-    :root {
-        --form-columns: 2;
-    }
 }
 
 @media (min-width: 1200px) {
@@ -238,14 +229,18 @@ main form .form-fieldset-wrapper > .field-wrapper{
 }
 
 @media (min-width: 1200px), (min-width: 992px) {
-    main form .form-checkbox-wrapper,
-    main form .form-textarea-wrapper,
-    main form .form-file-wrapper,
-    main form .form-fieldset-wrapper {
-        grid-column: 1/-1;
+    :root {
+        --form-columns: 2;
     }
 
-    main form .form-fieldset-wrapper {
+    main .form form .form-checkbox-wrapper,
+    main .form form .form-textarea-wrapper,
+    main .form form .form-file-wrapper,
+    main .form form .form-fieldset-wrapper {
+        flex: 1 0 100%;
+    }
+
+    main .form form .form-fieldset-wrapper {
         flex-flow: row wrap;
         gap: 10px 15px;
     }
