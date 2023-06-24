@@ -61,6 +61,7 @@ main .form form {
     display: flex;
     flex-wrap: wrap;
     gap: var(--form-field-vert-gap) var(--form-field-horz-gap);
+    align-items: start;
 }
 
 main .form form fieldset {
@@ -91,7 +92,7 @@ main .form input, main .form textarea, main .form select {
 
 main .form input[type='file'] {
     border: none;
-    padding-left:0;
+    padding-inline-start:0;
 }
 
 main .form input[type='checkbox'],
@@ -133,7 +134,7 @@ main .form label {
 main .form label.required::after {
     content: "*";
     color: var(--form-label-color);
-    padding-left: 5px;
+    padding-inline-start: 5px;
 }
 
 main .form form p,
@@ -183,6 +184,7 @@ main .form button {
     font-size: var(--form-button-font-size);
     font-weight: var(--mt-font-weight-bold);
     border-radius: unset;
+    width: 100%;
 }
 
 main .form button:hover {
@@ -209,6 +211,10 @@ main .form button:disabled {
 @media (min-width: 768px) {
     :root {
         --form-width: 740px;
+    }
+
+    main .form button {
+        width: unset;
     }
 }
 
