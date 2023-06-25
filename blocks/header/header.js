@@ -123,6 +123,15 @@ export default async function decorate(block) {
       });
     }
 
+    const githubLink = getMetadata('github');
+    const navTools = nav.querySelector('.nav-tools');
+    if (githubLink && navTools) {
+      const p = document.createElement('p');
+      p.classList.add('github');
+      p.innerHTML = `<a href="${githubLink}" target="_blank" rel="noopener noreferrer"><span>Github</span></a>`;
+      navTools.append(p);
+    }
+
     // hamburger for mobile
     const hamburger = document.createElement('div');
     hamburger.classList.add('nav-hamburger');
