@@ -188,6 +188,36 @@ header nav .nav-sections ul > li > ul > li {
   font-weight: 500;
 }
 
+header nav .nav-tools {
+  display: flex;
+  gap: 25px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+header nav .nav-tools > p {
+  flex: 0 1 auto;
+  font-size: var(--heading-font-size-xs);
+}
+
+header nav .nav-tools > p.github  {
+  flex: 0 1 auto;
+  font-size: var(--heading-font-size-xs);
+}
+
+header nav .nav-tools > p.github > a  {
+  background-image: url(/icons/github-mark.svg);
+  width: 36px;
+  height: 36px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
+header nav .nav-tools > p.github > a > span {
+  display: none;
+}
+
 @media (min-width: 900px) {
   header nav .nav-sections {
     display: block;
@@ -268,6 +298,16 @@ header nav .nav-sections ul > li > ul > li {
 
   header nav .nav-sections > ul > li > ul > li {
     padding: 8px 0;
+  }
+
+  header nav .nav-tools > p.github > a > span {
+    display: inline;
+  }
+
+  header nav .nav-tools > p.github > a  {
+    background: unset;
+    width: unset;
+    height: unset;
   }
 }
 
