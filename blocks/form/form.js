@@ -27,19 +27,19 @@ async function submissionFailure(error, form) {
   form.querySelector('button[type="submit"]').disabled = false;
 }
 
-async function prepareRequest(form, token) {
+async function prepareRequest(form) {
   const { payload } = constructPayload(form);
   const headers = {
     'Content-Type': 'application/json',
   };
-  const body = JSON.stringify({ data: payload, token });
+  const body = JSON.stringify({ data: payload });
   const url = form.dataset.action;
   return { headers, body, url };
 }
 
-async function submitForm(form, token) {
+async function submitForm(form) {
   try {
-    const { headers, body, url } = await prepareRequest(form, token);
+    const { headers, body, url } = await prepareRequest(form);
     const response = await fetch(url, {
       method: 'POST',
       headers,
@@ -309,6 +309,7 @@ async function createForm(formURL) {
     form.append(el);
   });
   groupFieldsByFieldSet(form);
+  includeCaptcha(form);
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
   form.addEventListener('submit', (e) => {
