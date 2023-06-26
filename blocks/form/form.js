@@ -6,7 +6,6 @@ function generateUnique() {
 
 function constructPayload(form) {
   const payload = { __id__: generateUnique() };
-  const attachments = {};
   [...form.elements].forEach((fe) => {
     if (fe.name) {
       if (fe.type === 'radio') {
@@ -18,7 +17,7 @@ function constructPayload(form) {
       }
     }
   });
-  return { payload, attachments };
+  return { payload };
 }
 
 async function submissionFailure(error, form) {
@@ -314,7 +313,7 @@ async function createForm(formURL) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.submitter.setAttribute('disabled', '');
-    handleSubmit(form, e.submitter.dataset?.redirect);
+    handleSubmit(form);
   });
   return form;
 }
