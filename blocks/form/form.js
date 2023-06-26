@@ -1,4 +1,4 @@
-import { readBlockConfig, sampleRUM } from '../../scripts/lib-franklin.js';
+import { sampleRUM } from '../../scripts/lib-franklin.js';
 
 function generateUnique() {
   return new Date().valueOf() + Math.random();
@@ -288,11 +288,7 @@ async function fetchForm(pathname) {
   return jsonData;
 }
 
-async function decorateComponents() {
-  return undefined;
-}
-
-async function createForm(formURL, config) {
+async function createForm(formURL) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
   const form = document.createElement('form');
@@ -313,7 +309,6 @@ async function createForm(formURL, config) {
     form.append(el);
   });
   groupFieldsByFieldSet(form);
-  await decorateComponents(form, config);
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
   form.addEventListener('submit', (e) => {
@@ -325,10 +320,9 @@ async function createForm(formURL, config) {
 }
 
 export default async function decorate(block) {
-  const config = readBlockConfig(block);
   const formLink = block.querySelector('a[href$=".json"]');
   if (formLink) {
-    const form = await createForm(formLink.href, config);
+    const form = await createForm(formLink.href);
     formLink.replaceWith(form);
   }
 }
