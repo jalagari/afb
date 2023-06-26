@@ -309,7 +309,6 @@ async function createForm(formURL) {
     form.append(el);
   });
   groupFieldsByFieldSet(form);
-  includeCaptcha(form);
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
   form.addEventListener('submit', (e) => {
