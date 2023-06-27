@@ -12,8 +12,7 @@ jobs:
         id: data-processor
         uses: hegupta-adbe/form-data-processor@master
         with:
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          azure-resource: ${{ secrets.AZURE_RESOURCE }}
+          google-sa-email: ${{ secrets.GOOGLE_SA_EMAIL }}
+          google-sa-pk: ${{ secrets.GOOGLE_SA_PK }}
       - name: Get the result
         run: echo "The result of processing was ${{ steps.data-processor.outputs.processing-result }}"
