@@ -14,5 +14,8 @@ jobs:
         with:
           google-sa-email: ${{ secrets.GOOGLE_SA_EMAIL }}
           google-sa-pk: ${{ secrets.GOOGLE_SA_PK }}
+          sf-instance-url: ${{ vars.SF_INSTANCE_URL }}
+          sf-client-id: ${{ secrets.SF_CLIENT_ID }}
+          sf-client-secret: ${{ secrets.SF_CLIENT_SECRET }}
       - name: Get the result
         run: echo "The result of processing was ${{ steps.data-processor.outputs.processing-result }}"
