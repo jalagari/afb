@@ -26,11 +26,12 @@
     --form-label-color: var(--label-color);
     --form-label-font-size: var(--form-font-size-s);
     --form-label-font-weight: 400;
+    --form-title-font-weight: 600;
     --form-fieldset-border: 0;
     --form-fieldset-marign: 0;
     --form-fieldset-legend-color: var(--form-label-color);
     --form-fieldset-legend-font-size: var(--form-label-font-size);
-    --form-fieldset-legend-font-weight: var(--form-label-font-weight);
+    --form-fieldset-legend-font-weight: var(--form-title-font-weight);
     --form-fieldset-legend-border: none;
     --form-fieldset-legend-padding: 0;
     --form-button-color: var(--background-color-primary);
@@ -230,9 +231,9 @@ main form .form-fieldset-wrapper {
     flex-direction: column;
 }
 
-main form .form-fieldset-wrapper > .field-wrapper{
+/* main form .form-fieldset-wrapper > .field-wrapper{
     flex: 1 0 auto;
-}
+} */
 
 @media (min-width: 1200px), (min-width: 992px) {
     :root {
