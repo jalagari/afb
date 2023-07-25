@@ -202,6 +202,10 @@ main .form button:disabled {
     background-color: var(--form-input-disable-color);
 }
 
+main .form fieldset[data-repeatable='true'] .fieldset-Remove::after {
+    content: 'Remove';
+}
+
 @media (min-width: 576px) {
     :root {
         --form-width: 540px;
