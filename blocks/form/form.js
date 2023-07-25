@@ -74,7 +74,7 @@ const constraintsDef = Object.entries({
   'email|text': [['Max', 'maxlength'], ['Min', 'minlength']],
   'number|range|date': ['Max', 'Min', 'Step'],
   file: ['Accept', 'Multiple'],
-  fieldset: ['Max', 'Min']
+  fieldset: ['Max', 'Min'],
 }).flatMap(([types, constraintDef]) => types.split('|')
   .map((type) => [type, constraintDef.map((cd) => (Array.isArray(cd) ? cd : [cd, cd]))]));
 
