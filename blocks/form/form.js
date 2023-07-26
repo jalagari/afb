@@ -1,4 +1,5 @@
 import { sampleRUM } from '../../scripts/lib-franklin.js';
+import decorateFieldset from './fieldset.js';
 
 function generateUnique() {
   return new Date().valueOf() + Math.random();
@@ -73,6 +74,7 @@ const constraintsDef = Object.entries({
   'email|text': [['Max', 'maxlength'], ['Min', 'minlength']],
   'number|range|date': ['Max', 'Min', 'Step'],
   file: ['Accept', 'Multiple'],
+  fieldset: ['Max', 'Min'],
 }).flatMap(([types, constraintDef]) => types.split('|')
   .map((type) => [type, constraintDef.map((cd) => (Array.isArray(cd) ? cd : [cd, cd]))]));
 
@@ -211,6 +213,10 @@ function createFieldSet(fd) {
   const wrapper = createFieldWrapper(fd, 'fieldset');
   wrapper.name = fd.Name;
   wrapper.replaceChildren(createLegend(fd));
+  if (fd.Repeatable && fd.Repeatable.toLowerCase() === 'true') {
+    setConstraints(wrapper, fd);
+    wrapper.dataset.repeatable = 'true';
+  }
   return wrapper;
 }
 
@@ -271,6 +277,10 @@ function renderField(fd) {
   return field;
 }
 
+function decorateFormFields(form) {
+  decorateFieldset(form);
+}
+
 async function fetchData(url) {
   const resp = await fetch(url);
   const json = await resp.json();
@@ -315,6 +325,7 @@ async function createForm(formURL) {
     e.submitter.setAttribute('disabled', '');
     handleSubmit(form);
   });
+  decorateFormFields(form);
   return form;
 }
 
