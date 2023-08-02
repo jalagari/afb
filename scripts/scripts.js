@@ -152,3 +152,33 @@ async function loadPage() {
 }
 
 loadPage();
+
+// open editor on custom event
+const openEditor = async (event) => {
+  const imsOrgId = "@formsinternal01";
+  const currentPageUrl = window.location.href.replace(/^https?:\/\//i, "");
+  const editorUrl = `https://experience.adobe.com/#/${imsOrgId}/aem/editor/canvas/${currentPageUrl}`;
+  const formElement = document.documentElement.querySelector("div.form");
+  if (formElement === null) {
+    alert("No Form Found on page");
+  } else {
+    window.open(editorUrl, "_blank");
+  }
+};
+
+const sk = document.querySelector("helix-sidekick");
+if (sk) {
+  // sidekick already loaded
+  sk.addEventListener("custom:editform", openEditor);
+} else {
+  // wait for sidekick to be loaded
+  document.addEventListener(
+    "sidekick-ready",
+    () => {
+      document
+        .querySelector("helix-sidekick")
+        .addEventListener("custom:editform", openEditor);
+    },
+    { once: true }
+  );
+}
