@@ -27,19 +27,22 @@ async function submissionFailure(error, form) {
   form.querySelector('button[type="submit"]').disabled = false;
 }
 
-async function prepareRequest(form) {
+async function prepareRequest(form, transformer) {
   const { payload } = constructPayload(form);
   const headers = {
     'Content-Type': 'application/json',
   };
   const body = JSON.stringify({ data: payload });
   const url = form.dataset.action;
+  if (typeof transformer === 'function') {
+    return transformer({ headers, body, url }, form);
+  }
   return { headers, body, url };
 }
 
-async function submitForm(form) {
+async function submitForm(form, transformer) {
   try {
-    const { headers, body, url } = await prepareRequest(form);
+    const { headers, body, url } = await prepareRequest(form, transformer);
     const response = await fetch(url, {
       method: 'POST',
       headers,
@@ -57,10 +60,10 @@ async function submitForm(form) {
   }
 }
 
-async function handleSubmit(form) {
+async function handleSubmit(form, transformer) {
   if (form.getAttribute('data-submitting') !== 'true') {
     form.setAttribute('data-submitting', 'true');
-    await submitForm(form);
+    await submitForm(form, transformer);
   }
 }
 
@@ -281,6 +284,23 @@ function decorateFormFields(form) {
   decorateFieldset(form);
 }
 
+async function applyTransformation(formDef, form) {
+  try {
+    const mod = await import('./transformer.js');
+    const {
+      default: {
+        transformDOM = () => {},
+        transformRequest,
+      },
+    } = mod;
+    transformDOM(formDef, form);
+    return transformRequest;
+  } catch (e) {
+    console.log('no custom decorators found.');
+  }
+  return (req) => req;
+}
+
 async function fetchData(url) {
   const resp = await fetch(url);
   const json = await resp.json();
@@ -318,12 +338,13 @@ async function createForm(formURL) {
     form.append(el);
   });
   groupFieldsByFieldSet(form);
+  const transformRequest = await applyTransformation(data, form);
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.submitter.setAttribute('disabled', '');
-    handleSubmit(form);
+    handleSubmit(form, transformRequest);
   });
   decorateFormFields(form);
   return form;
