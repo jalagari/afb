@@ -13,7 +13,7 @@ function loadScript(url) {
   return script;
 }
 
-export async function decorateCaptcha(formDef, form) {
+export async function transformCaptchaDOM(formDef, form) {
   const button = form.querySelector('button[type="submit"]');
   const obs = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {

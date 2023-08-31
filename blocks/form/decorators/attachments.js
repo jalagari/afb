@@ -70,7 +70,7 @@ function validateLimit(files, attachedFiles, multiple = false, max = -1) {
   return { filesToAttach, filesToReject };
 }
 
-export async function decorateFile(formDef, form) {
+export async function transformFileDOM(formDef, form) {
   const wrappers = form.querySelectorAll('.form-file-wrapper');
   [...wrappers].forEach((wrapper) => {
     const attachedFiles = [];

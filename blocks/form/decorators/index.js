@@ -1,9 +1,9 @@
-import { decorateFile, transformFileRequest } from './attachments.js';
-import { decorateCaptcha, transformCaptchaRequest } from './recaptcha.js';
+import { transformFileDOM, transformFileRequest } from './attachments.js';
+import { transformCaptchaDOM, transformCaptchaRequest } from './recaptcha.js';
 
 export const transformers = [
-  decorateFile,
-  decorateCaptcha,
+  transformFileDOM,
+  transformCaptchaDOM,
 ];
 
 export const asyncTransformers = [
