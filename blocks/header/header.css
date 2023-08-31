@@ -195,6 +195,7 @@ header nav .nav-tools {
   gap: 25px;
   flex-wrap: nowrap;
   align-items: center;
+  grid-area: tools;
 }
 
 header nav .nav-tools > p {
@@ -208,7 +209,7 @@ header nav .nav-tools > p.github  {
 }
 
 header nav .nav-tools > p.github > a  {
-  background-image: url(/icons/github-mark.svg);
+  background-image: url('/icons/github-mark.svg');
   width: 36px;
   height: 36px;
   background-size: contain;
@@ -311,9 +312,4 @@ header nav .nav-tools > p.github > a > span {
     width: unset;
     height: unset;
   }
-}
-
-/* tools */
-header nav .nav-tools {
-  grid-area: tools;
 }
