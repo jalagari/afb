@@ -203,6 +203,28 @@ main .form button:disabled {
     background-color: var(--form-input-disable-color);
 }
 
+main .form-file-wrapper input[type="file"] {
+    display: none;
+}
+
+main .form-file-wrapper .field-dropregion {
+    background: rgb(0 0 0 / 2%);
+    border: 1px dashed var(--mt-global-color-silver);
+    border-radius: 4px;
+    margin: 11px 0 8px;
+    padding: 32px;
+    text-align: center;
+}
+
+main .form-file-wrapper .file-description button {
+    --form-button-padding: 15px;
+
+    background: url('/icons/delete.svg') no-repeat;
+    width: unset;
+    border: unset;
+    text-align: center;
+}
+
 @media (min-width: 576px) {
     :root {
         --form-width: 540px;
