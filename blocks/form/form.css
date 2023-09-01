@@ -47,6 +47,10 @@
     --form-width: 100%;
 }
 
+form [data-hidden="true"] {
+    display: none !important;
+}
+
 main .form-container {
     background-color: var(--mt-background-color-primary);
     padding: var(--form-padding);

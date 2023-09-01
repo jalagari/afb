@@ -125,6 +125,9 @@ function createFieldWrapper(fd, tagName = 'div') {
   if (fd.Mandatory.toLowerCase() === 'true') {
     fieldWrapper.dataset.required = '';
   }
+  if (fd.Hidden?.toLowerCase() === 'true') {
+    fieldWrapper.dataset.hidden = 'true';
+  }
   fieldWrapper.classList.add('field-wrapper');
   fieldWrapper.append(createLabel(fd));
   return fieldWrapper;
@@ -214,6 +217,7 @@ function createLegend(fd) {
 
 function createFieldSet(fd) {
   const wrapper = createFieldWrapper(fd, 'fieldset');
+  wrapper.id = fd.Id;
   wrapper.name = fd.Name;
   wrapper.replaceChildren(createLegend(fd));
   if (fd.Repeatable && fd.Repeatable.toLowerCase() === 'true') {
