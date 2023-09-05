@@ -1,5 +1,4 @@
 import { sampleRUM } from '../../scripts/lib-franklin.js';
-import decorateFieldset from './fieldset.js';
 
 function generateUnique() {
   return new Date().valueOf() + Math.random();
@@ -77,7 +76,7 @@ const constraintsDef = Object.entries({
   'email|text': [['Max', 'maxlength'], ['Min', 'minlength']],
   'number|range|date': ['Max', 'Min', 'Step'],
   file: ['Accept', 'Multiple'],
-  fieldset: ['Max', 'Min'],
+  fieldset: [['Max', 'data-max'], ['Min', 'data-min']],
 }).flatMap(([types, constraintDef]) => types.split('|')
   .map((type) => [type, constraintDef.map((cd) => (Array.isArray(cd) ? cd : [cd, cd]))]));
 
@@ -197,6 +196,7 @@ function createRadio(fd) {
 const createOutput = withFieldWrapper((fd) => {
   const output = document.createElement('output');
   output.name = fd.Name;
+  output.id = fd.Id;
   output.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
   output.innerText = fd.Value;
   return output;
@@ -246,7 +246,7 @@ function createPlainText(fd) {
   return paragraph;
 }
 
-const getId = (function getId() {
+export const getId = (function getId() {
   const ids = {};
   return (name) => {
     ids[name] = ids[name] || 0;
@@ -282,10 +282,6 @@ function renderField(fd) {
     field.append(createHelpText(fd));
   }
   return field;
-}
-
-function decorateFormFields(form) {
-  decorateFieldset(form);
 }
 
 async function applyTransformation(formDef, form) {
@@ -352,7 +348,6 @@ async function createForm(formURL) {
     e.submitter.setAttribute('disabled', '');
     handleSubmit(form, transformRequest);
   });
-  decorateFormFields(form);
   return form;
 }
 

@@ -47,6 +47,12 @@
     --form-width: 100%;
 }
 
+form output {
+    display: block;
+    font-weight: 700;
+    font-size: 1.625rem;
+}
+
 form [data-hidden="true"] {
     display: none !important;
 }
