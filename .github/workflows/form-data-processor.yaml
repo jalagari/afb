@@ -18,8 +18,5 @@ jobs:
           sf-instance-url: ${{ vars.SF_INSTANCE_URL }}
           sf-client-id: ${{ secrets.SF_CLIENT_ID }}
           sf-client-secret: ${{ secrets.SF_CLIENT_SECRET }}
-          sf-version: ${{ vars.SF_VERSION }}
-          sf-type: ${{ vars.SF_TYPE }}
-          form-to-sf-mapping: ${{ vars.FORM_TO_SF_MAPPING }}
       - name: Get the result
         run: echo "The result of processing was ${{ steps.data-processor.outputs.processing-result }}"
