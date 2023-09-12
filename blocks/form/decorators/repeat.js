@@ -1,4 +1,12 @@
-import { getId } from '../form.js';
+const getId = (function getId() {
+  const ids = {};
+  return (name) => {
+    ids[name] = ids[name] || 0;
+    const idSuffix = ids[name] ? `-${ids[name]}` : '';
+    ids[name] += 1;
+    return `${name}${idSuffix}`;
+  };
+}());
 
 function update(fieldset, index, labelTemplate) {
   const legend = fieldset.querySelector(':scope>.field-label').firstChild;

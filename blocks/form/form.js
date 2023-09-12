@@ -311,6 +311,7 @@ async function applyTransformation(formDef, form) {
     transformDOM(formDef, form);
     return transformRequest;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log('no custom decorators found.');
   }
   return (req) => req;
