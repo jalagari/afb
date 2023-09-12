@@ -348,6 +348,9 @@ async function createForm(formURL) {
       input.name = fd.Name;
       if (input.type !== 'file') {
         input.value = fd.Value;
+        if (input.type === 'radio' || input.type === 'checkbox') {
+          input.checked = fd.Checked === 'true';
+        }
       }
       if (fd.Description) {
         input.setAttribute('aria-describedby', `${fd.Id}-description`);
