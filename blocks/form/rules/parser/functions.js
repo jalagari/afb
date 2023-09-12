@@ -67,6 +67,17 @@ export default function functions(debug) {
       },
     },
 
+    ceiling: {
+      func: (args) => {
+        const num = toNumber(args[0]);
+        const significance = toNumber(args[1]);
+        if (num === 0 || significance === 0) {
+          return 0;
+        }
+        return Math.ceil(num / significance) * significance;
+      },
+    },
+
     min: {
       func: (args) => {
         // flatten the args into a single array
