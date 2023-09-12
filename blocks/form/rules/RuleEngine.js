@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import Formula from './parser/Formula.js';
 import transformRule from './RuleCompiler.js';
+import formatFns from '../formatting.js';
 
 function stripTags(input, allowd) {
   const allowed = ((`${allowd || ''}`)
@@ -137,8 +138,10 @@ export default class RuleEngine {
     const element = document.getElementById(fieldId);
     if (!(element instanceof NodeList)) {
       this.data[element.name] = coerceValue(value);
+      const { displayFormat } = element.dataset;
       if (element.tagName === 'OUTPUT') {
-        element.value = value;
+        const formatFn = formatFns[displayFormat] || ((x) => x);
+        element.value = formatFn(value);
         element.dataset.value = value;
       } else {
         element.value = value;

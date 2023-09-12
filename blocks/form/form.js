@@ -4,6 +4,17 @@ function generateUnique() {
   return new Date().valueOf() + Math.random();
 }
 
+const formatFns = await (async function imports() {
+  try {
+    const formatters = await import('./formatting.js');
+    return formatters.default;
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('Formatting library not found. Formatting will not be supported');
+  }
+  return {};
+}());
+
 function constructPayload(form) {
   const payload = { __id__: generateUnique() };
   [...form.elements].forEach((fe) => {
@@ -197,8 +208,12 @@ const createOutput = withFieldWrapper((fd) => {
   const output = document.createElement('output');
   output.name = fd.Name;
   output.id = fd.Id;
-  output.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
-  output.innerText = fd.Value;
+  const displayFormat = fd['Display Format'];
+  if (displayFormat) {
+    output.dataset.displayFormat = displayFormat;
+  }
+  const formatFn = formatFns[displayFormat] || ((x) => x);
+  output.innerText = formatFn(fd.Value);
   return output;
 });
 
@@ -342,7 +357,7 @@ async function createForm(formURL) {
   groupFieldsByFieldSet(form);
   const transformRequest = await applyTransformation(data, form);
   // eslint-disable-next-line prefer-destructuring
-  form.dataset.action = pathname.split('.json')[0];
+  form.dataset.action = pathname?.split('.json')[0];
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.submitter.setAttribute('disabled', '');
