@@ -1,5 +1,3 @@
-import { sampleRUM } from '../../scripts/lib-franklin.js';
-
 function generateUnique() {
   return new Date().valueOf() + Math.random();
 }
@@ -59,7 +57,6 @@ async function submitForm(form, transformer) {
       body,
     });
     if (response.ok) {
-      sampleRUM('form:submit');
       window.location.href = form.dataset?.redirect || 'thankyou';
     } else {
       const error = await response.text();
