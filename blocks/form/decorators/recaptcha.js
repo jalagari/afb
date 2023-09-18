@@ -16,7 +16,7 @@ function loadScript(url) {
 export async function transformCaptchaDOM(formDef, form) {
   SITE_KEY = formDef.find(field => field.Name === 'googleRecaptcha')?.Value;
   const button = form.querySelector('button[type="submit"]');
-  if (siteKey && button) {
+  if (SITE_KEY && button) {
     const obs = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
