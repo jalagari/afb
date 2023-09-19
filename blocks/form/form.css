@@ -68,6 +68,10 @@ main .form {
     background-color: var(--form-background-color);
 }
 
+main .form > div:not(:first-child) {
+    display: none;
+}
+
 main .form form {
     display: flex;
     flex-wrap: wrap;

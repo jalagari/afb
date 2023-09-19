@@ -1,3 +1,5 @@
+import { readBlockConfig } from '../../scripts/lib-franklin.js';
+
 function generateUnique() {
   return new Date().valueOf() + Math.random();
 }
@@ -41,7 +43,7 @@ async function prepareRequest(form, transformer) {
     'Content-Type': 'application/json',
   };
   const body = JSON.stringify({ data: payload });
-  const url = form.dataset.action;
+  const url = form.dataset.submit || form.dataset.action;
   if (typeof transformer === 'function') {
     return transformer({ headers, body, url }, form);
   }
@@ -372,5 +374,8 @@ export default async function decorate(block) {
   if (formLink) {
     const form = await createForm(formLink.href);
     formLink.replaceWith(form);
+
+    const config = readBlockConfig(block);
+    Object.entries(config).forEach(([key, value]) => { if (value) form.dataset[key] = value; });
   }
 }
