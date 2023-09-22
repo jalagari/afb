@@ -300,14 +300,17 @@ function renderField(fd) {
 
 async function applyTransformation(formDef, form) {
   try {
-    const mod = await import('./transformer.js');
-    const {
-      default: {
-        transformDOM = () => {},
-        transformRequest,
-      },
-    } = mod;
-    transformDOM(formDef, form);
+    const { requestTransformers, transformers } = await import('./decorators/index.js');
+    if (transformers) {
+      transformers.forEach(
+        (fn) => fn.call(this, formDef, form),
+      );
+    }
+
+    const transformRequest = async (request, fd) => requestTransformers?.reduce(
+      (promise, transformer) => promise.then((modifiedRequest) => transformer(modifiedRequest, fd)),
+      Promise.resolve(request),
+    );
     return transformRequest;
   } catch (e) {
     // eslint-disable-next-line no-console
