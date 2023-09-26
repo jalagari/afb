@@ -12,9 +12,7 @@ jobs:
         id: data-processor
         uses: hegupta-adbe/form-data-processor@master
         with:
-          google-sa-email: ${{ secrets.GOOGLE_SA_EMAIL }}
-          google-sa-pk: ${{ secrets.GOOGLE_SA_PK }}
-          google-sheet-id: ${{ vars.GOOGLE_SHEET_ID }}
+          ms-graph-auth-token: ${{ secrets.MS_GRAPH_AUTH_TOKEN }}
           sf-instance-url: ${{ vars.SF_INSTANCE_URL }}
           sf-client-id: ${{ secrets.SF_CLIENT_ID }}
           sf-client-secret: ${{ secrets.SF_CLIENT_SECRET }}
