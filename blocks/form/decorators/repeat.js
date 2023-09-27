@@ -11,7 +11,9 @@ const getId = (function getId() {
 function update(fieldset, index, labelTemplate) {
   const legend = fieldset.querySelector(':scope>.field-label').firstChild;
   const text = labelTemplate.replace('#', index + 1);
-  legend.textContent = text;
+  if (legend) {
+    legend.textContent = text;
+  }
   fieldset.id = getId(fieldset.name);
   fieldset.setAttribute('data-index', index);
   if (index > 0) {

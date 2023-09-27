@@ -120,14 +120,11 @@ export default class RuleEngine {
         stack.push(...this.dependencyTree[el].deps.Value);
       }
       // eslint-disable-next-line no-loop-func
-      this.dependencyTree[el]?.deps.Hidden?.forEach((field) => {
-        arr[field] = index;
-        index += 1;
-      });
-      // eslint-disable-next-line no-loop-func
-      this.dependencyTree[el]?.deps.Label?.forEach((field) => {
-        arr[field] = index;
-        index += 1;
+      ['Visible', 'Label'].forEach((prop) => {
+        this.dependencyTree[el]?.deps[prop]?.forEach((field) => {
+          arr[field] = index;
+          index += 1;
+        });
       });
       // @todo add label deps as well.
     } while (stack.length > 0);
@@ -153,13 +150,13 @@ export default class RuleEngine {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  updateHidden(fieldId, value) {
+  updateVisible(fieldId, value) {
     const element = document.getElementById(fieldId);
     let wrapper = element;
     if (!isFieldset(element)) {
       wrapper = element.closest('.field-wrapper');
     }
-    wrapper.dataset.hidden = value;
+    wrapper.dataset.visible = value;
   }
 
   // eslint-disable-next-line class-methods-use-this

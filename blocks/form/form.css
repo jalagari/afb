@@ -53,7 +53,7 @@ form output {
     font-size: 1.625rem;
 }
 
-form [data-hidden="true"] {
+form [data-visible="false"] {
     display: none !important;
 }
 
