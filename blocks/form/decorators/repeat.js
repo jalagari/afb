@@ -46,7 +46,7 @@ function insertRemoveButton(fieldset, wrapper, form) {
   const removeButton = createButton('Remove', 'remove');
   removeButton.addEventListener('click', () => {
     fieldset.remove();
-    wrapper.querySelector('.item-add').setAttribute('data-hidden', 'false');
+    wrapper.querySelector('.item-add').setAttribute('data-visible', 'true');
     wrapper.querySelectorAll('[data-repeatable="true"]').forEach((el, index) => {
       update(el, index, wrapper['#repeat-template-label']);
     });
@@ -74,7 +74,7 @@ const add = (wrapper, form) => (e) => {
     insertRemoveButton(newFieldset, wrapper, form);
   }
   if (+max <= childCount + 1) {
-    e.currentTarget.setAttribute('data-hidden', 'true');
+    e.currentTarget.setAttribute('data-visible', 'false');
   }
   currentTarget.insertAdjacentElement('beforebegin', newFieldset);
   const event = new CustomEvent('item:add', {
