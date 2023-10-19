@@ -21,7 +21,7 @@ export function createFieldWrapper(fd, tagName = 'div') {
     fieldWrapper.dataset.required = '';
   }
   if (fd.Hidden?.toLowerCase() === 'true') {
-    fieldWrapper.dataset.hidden = 'true';
+    fieldWrapper.dataset.visible = 'true';
   }
   fieldWrapper.classList.add('field-wrapper');
   fieldWrapper.append(createLabel(fd));
