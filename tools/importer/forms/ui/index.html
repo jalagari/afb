@@ -19,7 +19,17 @@
             
                 <form id="form" class="field-group" onkeydown="return event.key != 'Enter';">              
                     <label for="domainURL">Enter Domain URL:</label>
-                    <input type="url" id="domainURL" placeholder="example.com" required value="">
+                    <input type="url" id="domainURL" placeholder="example.com" required>
+                    <label for="formURL">Panel/Fieldset Selector :</label>
+                    <input type="text" id="groupBySelector" placeholder=".aem-GridColumn" autocomplete="on">
+                    <div class="switchcontainer">
+                        <span>Include hidden fields</span>
+                        <label class="switch">
+                            <input type="checkbox" id="includeHiddenFields" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <br>
                     <div class="switchcontainer">
                         <span>Include plain text</span>
                         <label class="switch">
