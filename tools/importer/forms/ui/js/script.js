@@ -19,6 +19,8 @@ const FORM_IMPORTER = 'https://g7ory75qdb.execute-api.ap-south-1.amazonaws.com/v
 const scanFormEl = document.querySelector('form');
 const domainEl = document.querySelector('#domainURL');
 const includePlainText = document.querySelector('#includePlainText');
+const includeHiddenFields = document.querySelector('#includeHiddenFields');
+const groupBySelector = document.querySelector('#groupBySelector');
 const startBtn = document.querySelector('#startBtn');
 const copyAction = document.querySelector('#copyAction');
 const msgEl = document.querySelector('#msg');
@@ -31,12 +33,30 @@ let editor;
 let article;
 let selectedForm;
 
+const emptyField = {
+  Name: '',
+  Type: '',
+  Description: '',
+  Placeholder: '',
+  Label: '',
+  'Read Only': '',
+  Mandatory: '',
+  Pattern: '',
+  Step: '',
+  Min: '',
+  Max: '',
+  Value: '',
+  Options: '',
+  OptionNames: '',
+  Fieldset: '',
+};
+
 function convertToCSV(fields, divider = '\t') {
   if (fields && fields.length > 0) {
-    const keys = Object.keys(fields?.[0]);
+    const keys = Object.keys({ ...emptyField, ...fields?.[0] });
     const th = keys.join(divider);
     const rows = fields
-      .map((field) => Object.values(field).join(divider))
+      .map((field) => Object.values({ ...emptyField, ...field }).join(divider))
       .join('\n');
     return `${th}\n${rows}`;
   }
@@ -111,13 +131,30 @@ function setupJSONView() {
   editor.session.setMode('ace/mode/json');
 }
 
+function fillUpMissingFields() {
+  forms.forEach((form) => {
+    const data = [];
+    form.data.forEach((field) => {
+      data.push({ ...emptyField, ...field });
+    });
+    form.data = data;
+  });
+}
+
 async function scanNow() {
   const valid = scanFormEl.checkValidity();
   if (valid) {
     cleanUp();
     updateStatus('Scan Initiated...');
     const domain = domainEl.value;
-    const payload = { url: domain, options: { includePlainText: includePlainText.checked } };
+    const payload = {
+      url: domain,
+      options: {
+        includePlainText: includePlainText.checked,
+        includeHidden: includeHiddenFields.checked,
+        groupBySelector: groupBySelector.value || '',
+      },
+    };
     try {
       const response = await fetch(FORM_IMPORTER, {
         method: 'POST',
@@ -129,6 +166,7 @@ async function scanNow() {
       if (response.ok) {
         forms = await response.json();
         renderCards(forms);
+        fillUpMissingFields(forms);
         updateStatus('Scanning Completed', true, false);
       } else {
         const msg = await response.text();
