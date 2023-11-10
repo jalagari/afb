@@ -13,25 +13,25 @@ Welcome to the documentation for the Form Block. This documentation provides inf
 
 ## Getting Started
 
-To begin working with the Form Block, follow the steps outlined in the [Getting Started Guide](link-to-getting-started-doc).
+To begin working with the Form Block, follow the steps outlined in the [Getting Started Guide](https://main--afb--adobe.hlx.live/).
 
 ---
 
 ## Form Block Capabilities
 
-Learn about the capabilities and features of the Form Block by visiting the [Form Block Capabilities](link-to-capabilities-doc) documentation.
+Learn about the capabilities and features of the Form Block by visiting the [Form Block Capabilities](https://main--afb--adobe.hlx.live/features) documentation.
 
 ---
 
 ## Use Cases
 
-Explore various use cases and scenarios where the Form Block can be effectively used. Visit the [Use Cases](link-to-use-cases-doc) documentation.
+Explore various use cases and scenarios where the Form Block can be effectively used. Visit the [Use Cases](https://main--afb--adobe.hlx.live/docs) documentation.
 
 ---
 
 ## Example
 
-For hands-on examples and implementations, refer to the [Example](link-to-example-doc) section.
+For hands-on examples and implementations, refer to the [Example](https://main--afb--adobe.hlx.live/templates) section.
 
 ---
 
