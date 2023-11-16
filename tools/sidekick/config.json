@@ -5,6 +5,15 @@
       "title": "Form Editor",
       "event": "editform",
       "environments": ["preview"]
-    }
+    },
+    {
+      "id": "docTemplateGenerator",
+      "title": "Generate Dor Template",
+      "url": "http://localhost:3000/template/docx",
+      "environments": ["edit"],
+      "excludePaths": ["*page","*live"],
+      "passReferrer": true,
+      "passConfig": true
+    }	
   ]
 }
