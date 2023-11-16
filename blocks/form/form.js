@@ -188,6 +188,7 @@ const createOutput = withFieldWrapper((fd) => {
     output.dataset.displayFormat = displayFormat;
   }
   const formatFn = formatFns[displayFormat] || ((x) => x);
+  output.dataset.value = fd.Value;
   output.innerText = formatFn(fd.Value);
   return output;
 });
