@@ -14,7 +14,7 @@ import { generateFormRendition } from '../../../../../blocks/form/form.js';
 
 /* eslint-disable no-undef */
 
-const FORM_IMPORTER = 'https://g7ory75qdb.execute-api.ap-south-1.amazonaws.com/vega-services/importer';
+const FORM_IMPORTER = 'https://zc0urw0h00.execute-api.ap-south-1.amazonaws.com/vega-services/importer';
 
 const scanFormEl = document.querySelector('form');
 const domainEl = document.querySelector('#domainURL');
