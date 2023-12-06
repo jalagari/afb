@@ -10,7 +10,7 @@
       "id": "docTemplateGenerator",
       "title": "Generate Dor Template",
       "url": "http://localhost:3000/template/docx",
-      "environments": ["edit","preview"],
+      "environments": ["edit"],
       "excludePaths": ["*page","*live"],
       "passReferrer": true,
       "passConfig": true
