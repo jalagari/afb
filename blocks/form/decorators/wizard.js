@@ -3,10 +3,9 @@ import { createButton } from '../util.js';
 export class WizardLayout {
   inputFields = 'input,textarea,select';
 
-  constructor(includePrevBtn = true, includeNextBtn = true, includeSkipBtn = true) {
+  constructor(includePrevBtn = true, includeNextBtn = true) {
     this.includePrevBtn = includePrevBtn;
     this.includeNextBtn = includeNextBtn;
-    this.includeSkipBtn = includeSkipBtn;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -88,12 +87,6 @@ export class WizardLayout {
       this.addButton(wrapper, form, {
         Label: 'BACK', Type: 'button', Name: 'back', Id: 'form-wizard-button-prev',
       }, false);
-    }
-
-    if (this.includeSkipBtn) {
-      this.addButton(wrapper, form, {
-        Label: 'SKIP', Type: 'button', Name: 'skip', Id: 'form-wizard-button-skip',
-      });
     }
 
     if (this.includeNextBtn) {
