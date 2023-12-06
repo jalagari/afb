@@ -9,7 +9,7 @@
     {
       "id": "docTemplateGenerator",
       "title": "Generate Dor Template",
-      "url": "https://zc0urw0h00.execute-api.ap-south-1.amazonaws.com/vega-services/helix-services--dorwrapperservice/template/docx",
+      "url": "https://zc0urw0h00.execute-api.ap-south-1.amazonaws.com/vega-services/template/docx",
       "environments": ["edit"],
       "excludePaths": ["*page","*live"],
       "passReferrer": true,
