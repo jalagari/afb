@@ -3,9 +3,23 @@ import { createButton } from '../util.js';
 export class WizardLayout {
   inputFields = 'input,textarea,select';
 
-  constructor(includePrevBtn = true, includeNextBtn = true) {
+  constructor(includePrevBtn = true, includeNextBtn = true, includeSkipBtn = true) {
     this.includePrevBtn = includePrevBtn;
     this.includeNextBtn = includeNextBtn;
+    this.includeSkipBtn = includeSkipBtn;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getSteps(form) {
+    return [...form.children].filter((step) => step.tagName.toLowerCase() === 'fieldset');
+  }
+
+  assignIndexToSteps(form) {
+    const steps = this.getSteps(form);
+    steps.forEach((step, index) => {
+      step.dataset.index = index;
+      step.style.setProperty('--wizard-step-index', index);
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -13,7 +27,7 @@ export class WizardLayout {
     const direction = forward ? 'nextElementSibling' : 'previousElementSibling';
 
     for (let sibling = current[direction]; sibling; sibling = sibling[direction]) {
-      if (sibling.dataset.visible !== 'true') {
+      if (sibling.dataset.hidden !== 'true') {
         return sibling;
       }
     }
@@ -27,7 +41,7 @@ export class WizardLayout {
   validateContainer(container) {
     const fieldElements = [...container.querySelectorAll(this.inputFields)];
     const isValid = fieldElements.reduce((valid, fieldElement) => {
-      const isFieldValid = fieldElement.checkValidity();
+      const isFieldValid = fieldElement.offsetParent !== null ? fieldElement.checkValidity() : true;
       return valid && isFieldValid;
     }, true);
 
@@ -49,6 +63,14 @@ export class WizardLayout {
     if (navigateTo && current !== navigateTo) {
       current.classList.remove('current-wizard-step');
       navigateTo.classList.add('current-wizard-step');
+      const event = new CustomEvent('wizard:navigate', {
+        detail: {
+          prevStep: { id: current.id, index: +current.dataset.index },
+          currStep: { id: navigateTo.id, index: +navigateTo.dataset.index },
+        },
+        bubbles: false,
+      });
+      form.dispatchEvent(event);
     }
   }
 
@@ -67,6 +89,13 @@ export class WizardLayout {
         Label: 'BACK', Type: 'button', Name: 'back', Id: 'form-wizard-button-prev',
       }, false);
     }
+
+    if (this.includeSkipBtn) {
+      this.addButton(wrapper, form, {
+        Label: 'SKIP', Type: 'button', Name: 'skip', Id: 'form-wizard-button-skip',
+      });
+    }
+
     if (this.includeNextBtn) {
       this.addButton(wrapper, form, {
         Label: 'NEXT', Type: 'button', Name: 'next', Id: 'form-wizard-button-next',
@@ -77,6 +106,7 @@ export class WizardLayout {
     if (submitBtn) {
       wrapper.append(submitBtn);
     }
+    this.assignIndexToSteps(form);
     form.append(wrapper);
     form.children[0]?.classList.add('current-wizard-step');
   }
@@ -91,3 +121,4 @@ export default function wizardLayout(formDef, form, block) {
 }
 
 export const navigate = layout.navigate.bind(layout);
+export const validateContainer = layout.validateContainer.bind(layout);

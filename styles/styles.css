@@ -21,6 +21,28 @@
 
 
   /* global colors */
+  /* colors */
+  --clr-brand-red: #9e2239;
+  --clr-black: #000;
+  --clr-white: #fff;
+  --clr-primary: #007CBD;
+  --clr-secondary: #007dbd;
+  --clr-gray: #f2f2f2;
+  --clr-gray-light: #dad6d6;
+  --clr-gray-dark: #757575;
+  --clr-gray-medium: #4a525e;
+  --clr-teal: #006781;
+  --clr-teal-light: #248464;
+  --clr-green: #0f5132;
+  --clr-teal-dark: #002f39;
+  --clr-purple: #53469c;
+  --clr-cyan: #96e0ff;
+  --clr-blue-light: #eaf9ff;
+  --clr-blue: #006781;
+  --clr-error: #db0000;
+  --clr-danger: #dc3545;
+  --clr-success: #28a745;
+
   --mt-global-color-base-primary: #84329B;
   --mt-global-color-base-secondary: #3D3E40;
   --mt-global-color-accent-primary: #5F8DDA;
