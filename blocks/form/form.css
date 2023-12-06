@@ -303,13 +303,17 @@ main .wizard form .current-wizard-step.field-wrapper:last-of-type ~ .form-wizard
 
 @media(min-width: 992px) {
     main .wizard.left {
-        --wizard-left-titlebar-width: 450px;
+        --wizard-left-titlebar-width: 400px;
         --wizard-left-form-padding: 30px;
         --wizard-left-titlebar-padding: var(--wizard-left-form-padding);
         --wizard-left-form-padding-bottom: 160px;
+        --form-columns: 1;
+        --fieldset-coulmns: 1;
     }
 
     main .wizard.left form {
+        display: grid;
+        grid-template-columns: repeat(var(--form-columns), minmax(0, 1fr));
         border: 2px solid var(--clr-gray-dark);
         background-color: var(--clr-gray);
         gap: unset;
@@ -317,6 +321,8 @@ main .wizard form .current-wizard-step.field-wrapper:last-of-type ~ .form-wizard
 
     /* wizard title on left */
     main .wizard.left form .current-wizard-step {
+        display: grid;
+        grid-template-columns: repeat(var( --fieldset-coulmns), minmax(0, 1fr));
         border-left: 2px solid var(--clr-gray-dark);
         margin-left: var(--wizard-left-titlebar-width);
         background-color: var(--clr-white);
@@ -324,7 +330,10 @@ main .wizard form .current-wizard-step.field-wrapper:last-of-type ~ .form-wizard
         min-width: 540px;
         padding: var(--wizard-left-form-padding);
         padding-bottom: var(--wizard-left-form-padding-bottom);
-        flex: unset;
+    }
+
+    main .wizard.left form > fieldset {
+        width: unset;
     }
 
     main .wizard.left form > fieldset:not(.current-wizard-step) {
@@ -390,6 +399,10 @@ main .wizard form .current-wizard-step.field-wrapper:last-of-type ~ .form-wizard
 @media (min-width: 1200px) {
     :root {
         --form-width: 990px;
+    }
+
+    main .wizard.left {
+        --fieldset-coulmns: 2;
     }
 }
 
