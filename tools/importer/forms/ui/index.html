@@ -22,8 +22,10 @@
                     <input type="url" id="domainURL" placeholder="example.com" required>
                     <label for="formURL">Panel/Fieldset Selector :</label>
                     <input type="text" id="groupBySelector" placeholder=".aem-GridColumn" autocomplete="on">
+                    
+                    <h3>Options</h3>
                     <div class="switchcontainer">
-                        <span>Include hidden fields</span>
+                        <span>Hidden fields</span>
                         <label class="switch">
                             <input type="checkbox" id="includeHiddenFields" checked>
                             <span class="slider"></span>
@@ -31,9 +33,17 @@
                     </div>
                     <br>
                     <div class="switchcontainer">
-                        <span>Include plain text</span>
+                        <span>Plain text</span>
                         <label class="switch">
                             <input type="checkbox" id="includePlainText">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <br>
+                    <div class="switchcontainer">
+                        <span>Buttons</span>
+                        <label class="switch">
+                            <input type="checkbox" id="includeButtons" checked>
                             <span class="slider"></span>
                         </label>
                     </div>

@@ -77,7 +77,6 @@ button:disabled {
 }
 
 button {
-  background-color: #4CAF50;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -248,7 +247,7 @@ input::file-selector-button {
   position: relative;
   display: inline-block;
   width: 60px;
-  height: 34px;
+  height: 30px;
 }
 
 .switch input { 
@@ -272,21 +271,21 @@ input::file-selector-button {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 24px;
+  width: 24px;
   left: 4px;
-  bottom: 4px;
+  bottom: 3px;
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
 }
 
 input:checked + .slider {
-  background-color: #4CAF50;
+  background-color: var(--link-hover-color);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #4CAF50;
+  box-shadow: 0 0 1px var(--link-color);
 }
 
 input:checked + .slider:before {

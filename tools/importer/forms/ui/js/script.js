@@ -20,6 +20,7 @@ const scanFormEl = document.querySelector('form');
 const domainEl = document.querySelector('#domainURL');
 const includePlainText = document.querySelector('#includePlainText');
 const includeHiddenFields = document.querySelector('#includeHiddenFields');
+const includeButtons = document.querySelector('#includeButtons');
 const groupBySelector = document.querySelector('#groupBySelector');
 const startBtn = document.querySelector('#startBtn');
 const copyAction = document.querySelector('#copyAction');
@@ -135,7 +136,9 @@ function fillUpMissingFields() {
   forms.forEach((form) => {
     const data = [];
     form.data.forEach((field) => {
-      data.push({ ...emptyField, ...field });
+      if (!(field.Type === 'button' && !includeButtons.checked)) {
+        data.push({ ...emptyField, ...field });
+      }
     });
     form.data = data;
   });
@@ -153,6 +156,7 @@ async function scanNow() {
         includePlainText: includePlainText.checked,
         includeHidden: includeHiddenFields.checked,
         groupBySelector: groupBySelector.value || '',
+        includeStats: true,
       },
     };
     try {
