@@ -33,7 +33,7 @@ export function constructPayload(form) {
 }
 
 async function submissionFailure(error, form) {
-  alert(error); // TODO define error mechansim
+  alert("We can't process your submission right now because the form isn't set up to receive data. Please check out our 'Getting Started with EDS Forms' documentation to learn how to set up the sheet. Thanks!"); // TODO define error mechansim
   form.setAttribute('data-submitting', 'false');
   form.querySelector('button[type="submit"]').disabled = false;
 }
