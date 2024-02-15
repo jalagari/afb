@@ -50,6 +50,7 @@ const emptyField = {
   Options: '',
   OptionNames: '',
   Fieldset: '',
+  Repeatable: '',
 };
 
 function convertToCSV(fields, divider = '\t') {
