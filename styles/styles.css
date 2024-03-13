@@ -194,6 +194,7 @@ a.button:any-link, button {
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 30px;
+  font-size: var(--body-font-size-xs);
 }
 
 a.button:hover, a.button:focus, button:hover, button:focus  {
@@ -327,4 +328,21 @@ body.documentation {
 
 body.documentation h1:first-of-type {
   font-size: 45px;
+  margin-top: 0;
+  text-align: left;
+}
+
+p, li {
+  font-size: var(--body-font-size-s);
+}
+
+p.note {
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.note.warning {
+  border-color: #FEEC6F;
+  background-color: #FDF7DF;
+  color: #C9971C;
 }

@@ -67,6 +67,15 @@ export function decorateHeadings(main) {
   });
 }
 
+export function decorateNotes(main) {
+  [...main.querySelectorAll('strong')]
+    .filter((x) => x.innerText?.trim()?.toLowerCase() === 'note:')
+    .forEach((x) => {
+      x.parentElement.classList.add('note', 'warning');
+      x.remove();
+    });
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -80,6 +89,7 @@ export function decorateMain(main) {
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
+  decorateNotes(main);
 }
 
 /**

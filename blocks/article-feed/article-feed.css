@@ -1,4 +1,8 @@
 
+main .article-feed-container {
+  padding: 0;
+}
+
 .article-feed-container .default-content-wrapper {
   text-align: center;
 }
