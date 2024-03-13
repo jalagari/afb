@@ -287,6 +287,11 @@ main .section {
     max-width: 900px;
     margin: auto;
   }
+
+  main li img {
+    max-width: 50%;
+    margin-bottom: 40px;
+  }
 }
 
 /* section metadata */
