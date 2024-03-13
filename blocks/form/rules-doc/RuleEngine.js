@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import Formula from './parser/Formula.js';
 import transformRule from './RuleCompiler.js';
-import formatFns from '../formatting.js';
+import * as customFunctions from '../functions.js';
 
 function stripTags(input, allowd) {
   const allowed = ((`${allowd || ''}`)
@@ -52,7 +52,7 @@ function constructData(elements) {
 
 function getFieldsetPayload(form, fieldsetName) {
   let fieldsets = form.elements[fieldsetName];
-  if (!(fieldsets instanceof RadioNodeList)) {
+  if (!(fieldsets instanceof NodeList)) {
     fieldsets = [fieldsets];
   }
   const payload = {};
@@ -82,13 +82,33 @@ function constructPayload(form) {
   }, payload);
 }
 
+function registerFunctions(functions) {
+  const functionsMap = {};
+  Object.entries(functions).forEach(([name, funcDef]) => {
+    let finalFunction = funcDef;
+    if (typeof funcDef === 'function') {
+      finalFunction = {
+        _func: (args, data) => funcDef(...args, data),
+        _signature: [],
+      };
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(finalFunction, '_func')) {
+      console.warn(`Unable to register function with name ${name}.`);
+    } else {
+      functionsMap[name?.toLowerCase()] = finalFunction;
+    }
+  });
+  return functionsMap;
+}
+
 export default class RuleEngine {
   rulesOrder = {};
 
   constructor(formRules, fieldIdMap, formTag) {
     this.formTag = formTag;
     this.data = constructPayload(formTag);
-    this.formula = new Formula();
+    this.formula = new Formula(registerFunctions(customFunctions));
     const newRules = formRules.map(([fieldId, fieldRules]) => [
       fieldId,
       fieldRules.map((rule) => transformRule(rule, fieldIdMap, this.formula)),
@@ -116,11 +136,11 @@ export default class RuleEngine {
       const el = stack.pop();
       arr[el] = index;
       index += 1;
-      if (this.dependencyTree[el]?.deps.Value) {
-        stack.push(...this.dependencyTree[el].deps.Value);
+      if (this.dependencyTree[el]?.deps.value) {
+        stack.push(...this.dependencyTree[el].deps.value);
       }
       // eslint-disable-next-line no-loop-func
-      ['Visible', 'Label'].forEach((prop) => {
+      ['visible'].forEach((prop) => {
         this.dependencyTree[el]?.deps[prop]?.forEach((field) => {
           arr[field] = index;
           index += 1;
@@ -131,14 +151,12 @@ export default class RuleEngine {
     return Object.entries(arr).sort((a, b) => a[1] - b[1]).map((_) => _[0]).slice(1);
   }
 
-  updateValue(fieldId, value) {
-    const element = document.getElementById(fieldId);
+  valueUpdate(fieldId, value) {
+    const element = this.formTag.querySelector(`#${fieldId}`);
     if (!(element instanceof NodeList)) {
       this.data[element.name] = coerceValue(value);
-      const { displayFormat } = element.dataset;
       if (element.tagName === 'OUTPUT') {
-        const formatFn = formatFns[displayFormat] || ((x) => x);
-        element.value = formatFn(value);
+        element.value = value;
         element.dataset.value = value;
       } else {
         element.value = value;
@@ -150,20 +168,13 @@ export default class RuleEngine {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  updateVisible(fieldId, value) {
-    const element = document.getElementById(fieldId);
+  visibleUpdate(fieldId, value) {
+    const element = this.formTag.querySelector(`#${fieldId}`);
     let wrapper = element;
     if (!isFieldset(element)) {
       wrapper = element.closest('.field-wrapper');
     }
     wrapper.dataset.visible = value;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  updateLabel(fieldId, value) {
-    const element = document.getElementById(fieldId);
-    const label = element.closest('.field-wrapper').querySelector('.field-label');
-    label.innerHTML = sanitizeHTML(value);
   }
 
   setData(field) {
@@ -179,7 +190,7 @@ export default class RuleEngine {
     rules.forEach((fId) => {
       this.formRules[fId]?.forEach((rule) => {
         const newValue = this.formula.evaluate(rule.ast, this.data);
-        const handler = this[`update${rule.prop}`];
+        const handler = this[`${rule.prop}Update`];
         if (handler instanceof Function) {
           handler.apply(this, [fId, newValue]);
         }
@@ -195,7 +206,7 @@ export default class RuleEngine {
   }
 
   enable() {
-    this.formTag.addEventListener('input', (e) => {
+    this.formTag.addEventListener('change', (e) => {
       const field = e.target;
       const valid = e.target.checkValidity();
       if (valid) {
@@ -213,8 +224,10 @@ export default class RuleEngine {
         }
         if (field.type === 'radio') {
           const radios = this.formTag.elements[field.name];
-          if (radios instanceof RadioNodeList) {
+          if (radios instanceof NodeList) {
             rules = [...radios].flatMap((f) => this.getRules(f.id));
+          } else {
+            rules = this.getRules(radios.id);
           }
         } else {
           rules = this.getRules(fieldId);
@@ -223,32 +236,32 @@ export default class RuleEngine {
       }
     });
 
-    this.formTag.addEventListener('item:add', (e) => {
-      const fieldsetName = e.detail.item.name;
-      let fieldset = this.formTag.elements[fieldsetName];
-      if (fieldset instanceof RadioNodeList) {
-        fieldset = fieldset.item(0);
-      }
-      this.data = {
-        ...this.data,
-        ...getFieldsetPayload(this.formTag, fieldsetName),
-      };
-      const rules = [...fieldset.elements].map((fd) => this.getRules(fd.name)).flat();
-      this.applyRules(rules);
-    });
+    // this.formTag.addEventListener('item:add', (e) => {
+    //   const fieldsetName = e.detail.item.name;
+    //   let fieldset = this.formTag.elements[fieldsetName];
+    //   if (fieldset instanceof RadioNodeList) {
+    //     fieldset = fieldset.item(0);
+    //   }
+    //   this.data = {
+    //     ...this.data,
+    //     ...getFieldsetPayload(this.formTag, fieldsetName),
+    //   };
+    //   const rules = [...fieldset.elements].map((fd) => this.getRules(fd.name)).flat();
+    //   this.applyRules(rules);
+    // });
 
-    this.formTag.addEventListener('item:remove', (e) => {
-      const fieldsetName = e.detail.item.name;
-      let fieldset = this.formTag.elements[fieldsetName];
-      if (fieldset instanceof RadioNodeList) {
-        fieldset = fieldset.item(0);
-      }
-      this.data = {
-        ...this.data,
-        ...getFieldsetPayload(this.formTag, fieldsetName),
-      };
-      const rules = [...fieldset.elements].map((fd) => this.getRules(fd.name)).flat();
-      this.applyRules(rules);
-    });
+    // this.formTag.addEventListener('item:remove', (e) => {
+    //   const fieldsetName = e.detail.item.name;
+    //   let fieldset = this.formTag.elements[fieldsetName];
+    //   if (fieldset instanceof RadioNodeList) {
+    //     fieldset = fieldset.item(0);
+    //   }
+    //   this.data = {
+    //     ...this.data,
+    //     ...getFieldsetPayload(this.formTag, fieldsetName),
+    //   };
+    //   const rules = [...fieldset.elements].map((fd) => this.getRules(fd.name)).flat();
+    //   this.applyRules(rules);
+    // });
   }
 }
