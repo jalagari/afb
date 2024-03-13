@@ -1,9 +1,5 @@
 import { buildBlock, decorateBlock, loadBlock } from '../../scripts/lib-franklin.js';
 
-export function showForm() {
-
-}
-
 export default async function decorate(block) {
   const anchor = block.querySelector('a');
   if (anchor) {
@@ -19,7 +15,7 @@ export default async function decorate(block) {
     block.append(form);
     form.style.display = 'none';
     decorateBlock(form);
-    loadBlock(form);
+    await loadBlock(form);
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       form.querySelector('form [type="submit"]').disabled = true;
