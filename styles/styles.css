@@ -282,6 +282,13 @@ main .section {
   }
 }
 
+@media (min-width: 1200px) {
+  .section > div {
+    max-width: 900px;
+    margin: auto;
+  }
+}
+
 /* section metadata */
 main .section.highlight {
   background-color: var(--highlight-background-color);
